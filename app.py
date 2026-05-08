@@ -1,10 +1,10 @@
 import streamlit as st
-import google.generativeai as genai
+from google import genai
+from google.genai import types as genai_types
 import urllib.parse
 import json
 from datetime import datetime
 import re
-import streamlit.components.v1 as components
 
 # --- 1. APP CONFIGURATION ---
 st.set_page_config(
@@ -62,24 +62,21 @@ st.markdown("""
 # --- 2. API SETUP (SECURE) ---
 try:
     api_key = st.secrets["GOOGLE_API_KEY"]
-    genai.configure(api_key=api_key)
-    # Using Flash 1.5 for better free tier availability
-    model = genai.GenerativeModel('gemini-1.5-flash')
+    client = genai.Client(api_key=api_key)
+    model_name = 'gemini-1.5-flash'
 except Exception:
     try:
         api_key = st.secrets["google_api_key"]
-        genai.configure(api_key=api_key)
-        model = genai.GenerativeModel('gemini-1.5-flash')
+        client = genai.Client(api_key=api_key)
+        model_name = 'gemini-1.5-flash'
     except Exception as e:
         st.error("⚠️ API Key missing! Please set 'GOOGLE_API_KEY' in your .streamlit/secrets.toml file.")
         st.stop()
 
 # Try to upgrade to 2.0 flash if available
 try:
-    model_2 = genai.GenerativeModel('gemini-2.0-flash')
-    # Quick test to see if 2.0 is accessible
-    model_2.generate_content("test", generation_config=genai.types.GenerationConfig(max_output_tokens=1))
-    model = model_2
+    client.models.generate_content(model='gemini-2.0-flash', contents="test")
+    model_name = 'gemini-2.0-flash'
 except Exception:
     pass  # Stick with 1.5-flash
 
@@ -89,9 +86,10 @@ def generate_content(prompt_text, max_tokens=2048):
     """Wraps the API call with error handling."""
     try:
         with st.spinner("🤖 AI is thinking..."):
-            response = model.generate_content(
-                prompt_text,
-                generation_config=genai.types.GenerationConfig(
+            response = client.models.generate_content(
+                model=model_name,
+                contents=prompt_text,
+                config=genai_types.GenerateContentConfig(
                     max_output_tokens=max_tokens,
                     temperature=0.7
                 )
@@ -131,20 +129,6 @@ def extract_section(text, section_name):
     if match:
         return match.group(1).strip()
     return text
-
-def copy_to_clipboard_js(text_id):
-    """Generate JavaScript to copy text to clipboard."""
-    return f"""
-    <script>
-    function copyToClipboard() {{
-        const text = document.getElementById('{text_id}').innerText;
-        navigator.clipboard.writeText(text).then(() => {{
-            alert('Copied to clipboard!');
-        }});
-    }}
-    </script>
-    <button onclick="copyToClipboard()" style="cursor:pointer;">📋 Copy to Clipboard</button>
-    """
 
 def save_to_history(entry_type, content, metadata=None):
     """Save generated content to history."""
