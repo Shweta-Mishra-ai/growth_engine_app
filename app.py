@@ -60,35 +60,18 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # --- 2. API SETUP (SECURE) ---
-MODEL_OPTIONS = [
-    'gemini-2.0-flash',
-    'gemini-2.0-flash-exp',
-    'gemini-1.5-flash-002',
-    'gemini-1.5-flash',
-    'gemini-1.5-pro',
-]
-
 try:
     api_key = st.secrets["GOOGLE_API_KEY"]
     client = genai.Client(api_key=api_key)
-    model_name = MODEL_OPTIONS[0]
+    model_name = 'gemini-2.0-flash'
 except Exception:
     try:
         api_key = st.secrets["google_api_key"]
         client = genai.Client(api_key=api_key)
-        model_name = MODEL_OPTIONS[0]
+        model_name = 'gemini-2.0-flash'
     except Exception as e:
         st.error("⚠️ API Key missing! Please set 'GOOGLE_API_KEY' in your .streamlit/secrets.toml file.")
         st.stop()
-
-# Find a working model
-for model in MODEL_OPTIONS:
-    try:
-        client.models.generate_content(model=model, contents="test")
-        model_name = model
-        break
-    except Exception:
-        continue
 
 # --- 3. HELPER FUNCTIONS ---
 
