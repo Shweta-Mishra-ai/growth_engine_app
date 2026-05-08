@@ -60,25 +60,35 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # --- 2. API SETUP (SECURE) ---
+MODEL_OPTIONS = [
+    'gemini-2.0-flash',
+    'gemini-2.0-flash-exp',
+    'gemini-1.5-flash-002',
+    'gemini-1.5-flash',
+    'gemini-1.5-pro',
+]
+
 try:
     api_key = st.secrets["GOOGLE_API_KEY"]
     client = genai.Client(api_key=api_key)
-    model_name = 'gemini-1.5-flash'
+    model_name = MODEL_OPTIONS[0]
 except Exception:
     try:
         api_key = st.secrets["google_api_key"]
         client = genai.Client(api_key=api_key)
-        model_name = 'gemini-1.5-flash'
+        model_name = MODEL_OPTIONS[0]
     except Exception as e:
         st.error("⚠️ API Key missing! Please set 'GOOGLE_API_KEY' in your .streamlit/secrets.toml file.")
         st.stop()
 
-# Try to upgrade to 2.0 flash if available
-try:
-    client.models.generate_content(model='gemini-2.0-flash', contents="test")
-    model_name = 'gemini-2.0-flash'
-except Exception:
-    pass  # Stick with 1.5-flash
+# Find a working model
+for model in MODEL_OPTIONS:
+    try:
+        client.models.generate_content(model=model, contents="test")
+        model_name = model
+        break
+    except Exception:
+        continue
 
 # --- 3. HELPER FUNCTIONS ---
 
@@ -97,7 +107,11 @@ def generate_content(prompt_text, max_tokens=2048):
             return response.text
     except Exception as e:
         error_msg = str(e)
-        if "429" in error_msg or "quota" in error_msg.lower():
+        if "404" in error_msg:
+            st.error("⚠️ **Model Not Found**\n\n"
+                     "The specified model is not available. "
+                     "Try a different API key or wait for quota reset.")
+        elif "429" in error_msg or "quota" in error_msg.lower():
             st.error("⚠️ **API Quota Exceeded**\n\n"
                      "Your Google Gemini API key quota is exceeded. "
                      "If you just updated the key, **restart the app** (Streamlit caches secrets at startup).\n\n"
