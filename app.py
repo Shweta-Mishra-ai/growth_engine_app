@@ -63,15 +63,25 @@ st.markdown("""
 try:
     api_key = st.secrets["GOOGLE_API_KEY"]
     genai.configure(api_key=api_key)
-    model = genai.GenerativeModel('gemini-2.0-flash')
+    # Using Flash 1.5 for better free tier availability
+    model = genai.GenerativeModel('gemini-1.5-flash')
 except Exception:
     try:
         api_key = st.secrets["google_api_key"]
         genai.configure(api_key=api_key)
-        model = genai.GenerativeModel('gemini-2.0-flash')
+        model = genai.GenerativeModel('gemini-1.5-flash')
     except Exception as e:
         st.error("⚠️ API Key missing! Please set 'GOOGLE_API_KEY' in your .streamlit/secrets.toml file.")
         st.stop()
+
+# Try to upgrade to 2.0 flash if available
+try:
+    model_2 = genai.GenerativeModel('gemini-2.0-flash')
+    # Quick test to see if 2.0 is accessible
+    model_2.generate_content("test", generation_config=genai.types.GenerationConfig(max_output_tokens=1))
+    model = model_2
+except Exception:
+    pass  # Stick with 1.5-flash
 
 # --- 3. HELPER FUNCTIONS ---
 
@@ -88,7 +98,17 @@ def generate_content(prompt_text, max_tokens=2048):
             )
             return response.text
     except Exception as e:
-        st.error(f"API Error: {e}")
+        error_msg = str(e)
+        if "429" in error_msg or "quota" in error_msg.lower():
+            st.error("⚠️ **API Quota Exceeded**\n\n"
+                     "Your Google Gemini API key quota is exceeded. "
+                     "If you just updated the key, **restart the app** (Streamlit caches secrets at startup).\n\n"
+                     "Still failing? Try:\n"
+                     "1. **Enable billing** at [Google Cloud Console](https://console.cloud.google.com/apis/api/generativelanguage.googleapis.com/quotas)\n"
+                     "2. **Get a fresh key** at [Google AI Studio](https://aistudio.google.com/app/apikey) (use a different Google account)\n"
+                     "3. **Wait** - free tier resets daily. Check usage at https://ai.dev/rate-limit")
+        else:
+            st.error(f"API Error: {e}")
         return None
 
 def create_twitter_link(text):
