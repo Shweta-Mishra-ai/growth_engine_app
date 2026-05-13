@@ -59,18 +59,35 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # --- 2. API SETUP (SECURE) ---
+MODEL_LIST = ['gemini-1.5-flash', 'gemini-1.5-pro', 'gemini-pro']
+working_model = None
+
 try:
     api_key = st.secrets["GOOGLE_API_KEY"]
     genai.configure(api_key=api_key)
-    model = genai.GenerativeModel('gemini-1.5-flash')
 except Exception:
     try:
         api_key = st.secrets["google_api_key"]
         genai.configure(api_key=api_key)
-        model = genai.GenerativeModel('gemini-1.5-flash')
     except Exception as e:
         st.error("⚠️ API Key missing! Please set 'GOOGLE_API_KEY' in your .streamlit/secrets.toml file.")
         st.stop()
+
+# Find which model works for this API key
+for m_name in MODEL_LIST:
+    try:
+        test_model = genai.GenerativeModel(m_name)
+        test_model.generate_content("test", generation_config=genai.types.GenerationConfig(max_output_tokens=1))
+        working_model = test_model
+        break
+    except Exception:
+        continue
+
+if working_model is None:
+    st.error("❌ No compatible Gemini models found for this API key. Please check your project settings in Google AI Studio.")
+    st.stop()
+else:
+    model = working_model
 
 # --- 3. HELPER FUNCTIONS ---
 
