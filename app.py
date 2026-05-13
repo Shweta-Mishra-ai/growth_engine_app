@@ -1,6 +1,5 @@
 import streamlit as st
-from google import genai
-from google.genai import types as genai_types
+import google.generativeai as genai
 import urllib.parse
 import json
 from datetime import datetime
@@ -62,13 +61,13 @@ st.markdown("""
 # --- 2. API SETUP (SECURE) ---
 try:
     api_key = st.secrets["GOOGLE_API_KEY"]
-    client = genai.Client(api_key=api_key)
-    model_name = 'gemini-2.0-flash'
+    genai.configure(api_key=api_key)
+    model = genai.GenerativeModel('gemini-1.5-flash')
 except Exception:
     try:
         api_key = st.secrets["google_api_key"]
-        client = genai.Client(api_key=api_key)
-        model_name = 'gemini-2.0-flash'
+        genai.configure(api_key=api_key)
+        model = genai.GenerativeModel('gemini-1.5-flash')
     except Exception as e:
         st.error("⚠️ API Key missing! Please set 'GOOGLE_API_KEY' in your .streamlit/secrets.toml file.")
         st.stop()
@@ -79,10 +78,9 @@ def generate_content(prompt_text, max_tokens=2048):
     """Wraps the API call with error handling."""
     try:
         with st.spinner("🤖 AI is thinking..."):
-            response = client.models.generate_content(
-                model=model_name,
-                contents=prompt_text,
-                config=genai_types.GenerateContentConfig(
+            response = model.generate_content(
+                prompt_text,
+                generation_config=genai.types.GenerationConfig(
                     max_output_tokens=max_tokens,
                     temperature=0.7
                 )
@@ -90,20 +88,23 @@ def generate_content(prompt_text, max_tokens=2048):
             return response.text
     except Exception as e:
         error_msg = str(e)
-        if "404" in error_msg:
-            st.error("⚠️ **Model Not Found**\n\n"
-                     "The specified model is not available. "
-                     "Try a different API key or wait for quota reset.")
-        elif "429" in error_msg or "quota" in error_msg.lower():
+        if "quota" in error_msg.lower() or "429" in error_msg:
             st.error("⚠️ **API Quota Exceeded**\n\n"
-                     "Your Google Gemini API key quota is exceeded. "
-                     "If you just updated the key, **restart the app** (Streamlit caches secrets at startup).\n\n"
-                     "Still failing? Try:\n"
-                     "1. **Enable billing** at [Google Cloud Console](https://console.cloud.google.com/apis/api/generativelanguage.googleapis.com/quotas)\n"
-                     "2. **Get a fresh key** at [Google AI Studio](https://aistudio.google.com/app/apikey) (use a different Google account)\n"
-                     "3. **Wait** - free tier resets daily. Check usage at https://ai.dev/rate-limit")
+                     "Free tier limit khatam ho gayi.\n\n"
+                     "Solutions:\n"
+                     "1. Kal try karo (midnight GMT reset)\n"
+                     "2. Alti Google account se naya key banao\n"
+                     "3. Google Cloud pe free billing enable karo")
+        elif "API key not valid" in error_msg or "401" in error_msg:
+            st.error("⚠️ **Invalid API Key**\n\n"
+                     "Key galat hai ya revoke ho gayi hai.\n\n"
+                     "Naya key banao: https://aistudio.google.com/app/apikey")
+        elif "404" in error_msg or "not found" in error_msg.lower():
+            st.error("⚠️ **Model Not Available**\n\n"
+                     "Ye model tumhare key ke saath available nahi.")
         else:
             st.error(f"API Error: {e}")
+        return None
         return None
 
 def create_twitter_link(text):
