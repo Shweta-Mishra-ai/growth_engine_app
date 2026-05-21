@@ -74,17 +74,24 @@ except Exception:
         st.stop()
 
 # Find which model works for this API key
+available_models_list = []
 for m_name in MODEL_LIST:
     try:
         test_model = genai.GenerativeModel(m_name)
         test_model.generate_content("test", generation_config=genai.types.GenerationConfig(max_output_tokens=1))
         working_model = test_model
         break
-    except Exception:
+    except Exception as e:
+        available_models_list.append(f"{m_name}: {str(e)}")
         continue
 
 if working_model is None:
-    st.error("❌ No compatible Gemini models found for this API key. Please check your project settings in Google AI Studio.")
+    st.error("❌ No compatible Gemini models found for this API key.")
+    with st.expander("🔍 View Technical Details (Diagnostics)"):
+        st.write("The following models were tested and failed:")
+        for detail in available_models_list:
+            st.write(detail)
+    st.info("💡 Solution: Check your Google AI Studio project settings or try a different Google account.")
     st.stop()
 else:
     model = working_model
