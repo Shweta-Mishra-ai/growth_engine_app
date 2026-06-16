@@ -281,7 +281,7 @@ st.markdown("""
 # ─────────────────────────────────────────────
 # 3. API SETUP — No startup probing
 # ─────────────────────────────────────────────
-MODEL_NAME = "gemini-2.0-flash"
+MODEL_NAME = "gemini-2.5-flash"
 
 def init_model():
     """Initialize Gemini model once. Supports both old and new SDK."""
