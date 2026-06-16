@@ -1,5 +1,11 @@
 import streamlit as st
-import google.generativeai as genai
+try:
+    from google import genai
+    from google.genai import types as genai_types
+    _NEW_SDK = True
+except ImportError:
+    import google.generativeai as genai
+    _NEW_SDK = False
 import urllib.parse
 import json
 import re
@@ -278,23 +284,28 @@ st.markdown("""
 MODEL_NAME = "gemini-2.0-flash"
 
 def init_model():
-    """Initialize Gemini model once."""
+    """Initialize Gemini model once. Supports both old and new SDK."""
     try:
         api_key = st.secrets.get("GOOGLE_API_KEY") or st.secrets.get("google_api_key")
         if not api_key:
-            return None, "API Key missing. Set 'GOOGLE_API_KEY' in .streamlit/secrets.toml"
-        genai.configure(api_key=api_key)
-        return genai.GenerativeModel(MODEL_NAME), None
+            return None, None, "API Key missing. Set 'GOOGLE_API_KEY' in .streamlit/secrets.toml"
+        if _NEW_SDK:
+            client = genai.Client(api_key=api_key)
+            return None, client, None
+        else:
+            genai.configure(api_key=api_key)
+            return genai.GenerativeModel(MODEL_NAME), None, None
     except Exception as e:
-        return None, str(e)
+        return None, None, str(e)
 
 if "model" not in st.session_state:
-    _model, _err = init_model()
+    _model, _client, _err = init_model()
     st.session_state["model"] = _model
+    st.session_state["genai_client"] = _client
     st.session_state["model_error"] = _err
 
-model = st.session_state["model"]
-if model is None:
+_ready = st.session_state["model"] or st.session_state["genai_client"]
+if not _ready:
     st.error(f"⚠️ {st.session_state['model_error']}")
     st.markdown("""
     **Setup steps:**
@@ -310,24 +321,37 @@ if model is None:
 # ─────────────────────────────────────────────
 
 def generate_content(prompt_text: str, max_tokens: int = 2048) -> str | None:
-    """Wraps Gemini API call with clear error handling."""
+    """Wraps Gemini API call. Supports new google.genai SDK and old google.generativeai."""
     try:
-        response = model.generate_content(
-            prompt_text,
-            generation_config=genai.types.GenerationConfig(
-                max_output_tokens=max_tokens,
-                temperature=0.75
+        if _NEW_SDK:
+            client = st.session_state["genai_client"]
+            response = client.models.generate_content(
+                model=MODEL_NAME,
+                contents=prompt_text,
+                config=genai_types.GenerateContentConfig(
+                    max_output_tokens=max_tokens,
+                    temperature=0.75,
+                )
             )
-        )
-        return response.text
+            return response.text
+        else:
+            mdl = st.session_state["model"]
+            response = mdl.generate_content(
+                prompt_text,
+                generation_config=genai.types.GenerationConfig(
+                    max_output_tokens=max_tokens,
+                    temperature=0.75
+                )
+            )
+            return response.text
     except Exception as e:
         err = str(e)
-        if "429" in err or "quota" in err.lower():
+        if "429" in err or "quota" in err.lower() or "RESOURCE_EXHAUSTED" in err:
             st.error("⚠️ **API Quota Exceeded** — Free tier limit hit. Try again after midnight GMT, or create a new Google AI Studio key.")
-        elif "401" in err or "API key not valid" in err:
+        elif "401" in err or "API key not valid" in err or "INVALID_ARGUMENT" in err:
             st.error("⚠️ **Invalid API Key** — Check your secrets.toml. [Get a new key →](https://aistudio.google.com/app/apikey)")
         elif "404" in err or "not found" in err.lower():
-            st.error("⚠️ **Model Unavailable** — gemini-2.0-flash not accessible on this key. Ensure billing is enabled on Google Cloud.")
+            st.error("⚠️ **Model Unavailable** — gemini-2.0-flash not accessible on this key.")
         else:
             st.error(f"API Error: {err}")
         return None
@@ -453,7 +477,7 @@ with st.sidebar:
         "Custom",
     ]
     st.caption("BRAND VOICE")
-    selected_voice = st.selectbox("", voice_options, label_visibility="collapsed",
+    selected_voice = st.selectbox("Brand Voice", voice_options, label_visibility="collapsed",
                                    index=voice_options.index(st.session_state["brand_voice"])
                                    if st.session_state["brand_voice"] in voice_options else 0)
     st.session_state["brand_voice"] = selected_voice
