@@ -1,4 +1,5 @@
 import re
+from datetime import datetime
 
 
 def extract_section(text: str, markers: list) -> str:
@@ -29,3 +30,20 @@ def split_numbered_tweets(text: str) -> list:
 def char_count_status(text: str, limit: int) -> dict:
     count = len(text)
     return {"count": count, "limit": limit, "is_over": count > limit}
+
+
+def build_content_markdown(entries: list) -> str:
+    md = []
+    md.append("# Growth Engine AI — Content Export\n")
+    md.append(f"Generated on {datetime.now().strftime('%B %d, %Y at %I:%M %p')}\n")
+    md.append("---\n")
+    
+    for i, e in enumerate(entries, 1):
+        hdr = f"## {i}. {e.get('type','Content')}" + (f" ({e.get('platform','')})" if e.get('platform') else "")
+        md.append(hdr)
+        if e.get("timestamp"):
+            md.append(f"*Timestamp: {e['timestamp']}*\n")
+        md.append(e.get("content",""))
+        md.append("\n---\n")
+        
+    return "\n".join(md)

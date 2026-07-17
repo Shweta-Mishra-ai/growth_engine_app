@@ -1,5 +1,5 @@
 import pytest
-from services.text_parser import extract_section, split_variations, split_numbered_tweets, char_count_status
+from services.text_parser import extract_section, split_variations, split_numbered_tweets, char_count_status, build_content_markdown
 
 def test_extract_section():
     # Test extract_section with markdown headers
@@ -44,3 +44,16 @@ def test_char_count_status():
     
     status_over = char_count_status("Hello World!", 5)
     assert status_over == {"count": 12, "limit": 5, "is_over": True}
+
+
+def test_build_content_markdown():
+    entries = [
+        {"type": "Post", "platform": "LinkedIn", "content": "Hello LinkedIn!", "timestamp": "2026-07-17 12:00"},
+        {"type": "Tweet", "platform": "Twitter/X", "content": "Hello Twitter!", "timestamp": "2026-07-17 12:05"}
+    ]
+    md = build_content_markdown(entries)
+    assert "# Growth Engine AI" in md
+    assert "Hello LinkedIn!" in md
+    assert "Hello Twitter!" in md
+    assert "2026-07-17 12:00" in md
+

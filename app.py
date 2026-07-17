@@ -11,8 +11,7 @@ from prompts import (
     build_hashtag_research_prompt, build_engagement_analysis_prompt,
     build_video_storyboard_prompt,
 )
-from services import GeminiService, extract_section, split_variations, split_numbered_tweets, char_count_status
-from services.pdf_export import build_content_pdf
+from services import GeminiService, extract_section, split_variations, split_numbered_tweets, char_count_status, build_content_markdown
 from components.styles import inject_custom_css
 from components.sidebar import render_sidebar
 from components.shared import (
@@ -901,14 +900,24 @@ with tab_export:
             with st.expander(f"{e['type']} · {e['platform']} · {e['timestamp']}"):
                 st.text(e["content"][:300] + ("…" if len(e["content"]) > 300 else ""))
 
-        st.divider()
-        if st.button("📄 Download as PDF", type="primary", key="gen_pdf"):
-            with st.spinner("Building PDF…"):
-                pdf = build_content_pdf(st.session_state["history"])
+        col_ex1, col_ex2 = st.columns(2)
+        with col_ex1:
+            md_content = build_content_markdown(st.session_state["history"])
             st.download_button(
-                "⬇️ Download PDF",
-                data=pdf,
-                file_name=f"growth_engine_{datetime.now().strftime('%Y%m%d_%H%M')}.pdf",
-                mime="application/pdf",
-                key="download_pdf"
+                "⬇️ Download as Markdown (.md)",
+                data=md_content,
+                file_name=f"growth_engine_{datetime.now().strftime('%Y%m%d_%H%M')}.md",
+                mime="text/markdown",
+                key="download_md",
+                use_container_width=True
+            )
+        with col_ex2:
+            json_content = json.dumps(st.session_state["history"], indent=4, ensure_ascii=False)
+            st.download_button(
+                "⬇️ Download as JSON",
+                data=json_content,
+                file_name=f"growth_engine_{datetime.now().strftime('%Y%m%d_%H%M')}.json",
+                mime="application/json",
+                key="download_json",
+                use_container_width=True
             )
