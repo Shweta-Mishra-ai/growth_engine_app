@@ -1,183 +1,175 @@
-# 🚀 Growth Engine AI
+# 🚀 Growth Engine AI (v3.0 Modular Rewrite)
 
 ![Python](https://img.shields.io/badge/Python-3.9%2B-blue?style=for-the-badge&logo=python&logoColor=white)
-![Streamlit](https://img.shields.io/badge/Streamlit-1.31.0-FF4B4B?style=for-the-badge&logo=streamlit&logoColor=white)
-![Google Gemini](https://img.shields.io/badge/Google%20AI-Gemini%202.0%20Flash-4285F4?style=for-the-badge&logo=google&logoColor=white)
+![Streamlit](https://img.shields.io/badge/Streamlit-1.35%2B-FF4B4B?style=for-the-badge&logo=streamlit&logoColor=white)
+![Google Gemini](https://img.shields.io/badge/Google%20AI-Gemini%202.5%20Flash-4285F4?style=for-the-badge&logo=google&logoColor=white)
 ![License](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)
 
-**An AI-powered "Content Velocity Engine" designed to accelerate organic growth on LinkedIn, X (Twitter), and Instagram without using spam bots.**
+**An enterprise-grade, Human-in-the-Loop (HITL) social velocity platform to generate influencer-level content for LinkedIn, X (Twitter), and Instagram, analyze engagement potential, generate visuals, and schedule posts.**
 
 ---
 
 ## 📖 Overview
 
-**Growth Engine AI** is a Human-in-the-Loop (HITL) application that leverages the **Google Gemini 2.0 Flash LLM** to eliminate writer's block and optimize content for social media algorithms. 
-
-Unlike automation tools that risk account bans, this app focuses on **content creation and strategy**. It uses "Intent-based" posting, allowing you to generate high-quality drafts and post them directly to social platforms with a single click, keeping your account 100% safe.
-
-### 🌟 Key Features
-
-* **✍️ Viral Post Generator:**
-    * Takes raw ideas/notes and transforms them into two formats simultaneously:
-        * **LinkedIn:** Professional, story-driven, formatted for readability.
-        * **Twitter/X:** Thread-style format (Hook + Value + Conclusion) under 280 chars.
-    * Direct "Post to" links for each platform.
-    * One-click copy to clipboard.
-
-* **🎣 Hook Smith (A/B Tester):**
-    * Analyzes your opening line and rewrites it using viral psychological frameworks.
-    * Customizable number of hooks (3-10).
-    * *Goal:* Increase "Stop Scroll" rate.
-
-* **🔍 Profile Auditor:**
-    * Acts as a Senior Personal Brand Consultant.
-    * Grades your bio (0-10), identifies weaknesses/strengths, and suggests SEO-optimized improvements.
-    * Platform-specific optimization (LinkedIn, Twitter/X, or Both).
-
-* **🏷️ Hashtag Generator (NEW):**
-    * AI-powered hashtag suggestions based on your topic.
-    * Platform-optimized (LinkedIn, Twitter/X, Instagram).
-    * Categorized by competition level (High/Medium/Low).
-    * Mix of trending and niche hashtags.
-
-### 🆕 NEW Features (v2.0)
-
-* **Brand Voice Customization** - Choose from 7 preset voices or create your own custom brand voice
-* **Content History** - Automatically saves all generated content with search and filter
-* **Export History** - Download your content history as JSON for backup
-* **Copy to Clipboard** - One-click copy for all generated content
-* **Platform-Specific Links** - Working "Post to" links for LinkedIn and Twitter/X
-* **Session State Management** - No more data leaking between tabs
-* **Improved Error Handling** - Graceful API error recovery and input validation
-* **Configurable Temperature** - Fine-tune AI creativity
+**Growth Engine AI v3.0** completely refactors the monolithic application into a highly maintainable, modular structure. It introduces influencer-pacing prompts, robust A/B testing hooks, profile auditing, and dynamic graphic generation without needing paid design tools or complex API keys.
 
 ---
 
-## 🛠️ Tech Stack
+## 🎨 System Architecture
 
-* **Frontend:** [Streamlit](https://streamlit.io/) (Rapid UI Development)
-* **LLM Engine:** [Google Gemini API](https://ai.google.dev/) (Model: `gemini-2.0-flash`)
-* **Authentication:** Streamlit Secrets Management (Secure API Key handling)
-* **Posting Mechanism:** Web Intent URLs (No paid platform APIs required)
+The following diagram illustrates how the modular components communicate with one another:
+
+```mermaid
+graph TD
+    classDef main fill:#6366f1,stroke:#4f46e5,stroke-width:2px,color:#fff;
+    classDef comp fill:#1e293b,stroke:#475569,stroke-width:1px,color:#cbd5e1;
+    classDef svc fill:#0f172a,stroke:#334155,stroke-width:1px,color:#94a3b8;
+
+    A[app.py Entrypoint]:::main
+    
+    subgraph UI Components
+        B[styles.py Custom CSS]:::comp
+        C[sidebar.py Voice Settings]:::comp
+        D[shared.py copy/share JS elements]:::comp
+    end
+    
+    subgraph Prompt Engine
+        E[linkedin.py]:::comp
+        F[twitter.py]:::comp
+        G[instagram.py]:::comp
+        H[profile_auditor.py]:::comp
+        I[hashtag_lab.py]:::comp
+        J[engagement.py]:::comp
+        K[video_storyboard.py]:::comp
+        L[graphics.py]:::comp
+    end
+    
+    subgraph Services & APIs
+        M[GeminiService SDK Wrapper]:::svc
+        N[Pollinations AI Image Generator API]:::svc
+        O[PDF Export ReportLab Service]:::svc
+        P[Text Parser Utilities]:::svc
+    end
+    
+    A --> B
+    A --> C
+    A --> D
+    
+    A --> E
+    A --> F
+    A --> G
+    A --> H
+    A --> I
+    A --> J
+    A --> K
+    A --> L
+    
+    E & F & G & H & I & J & K & L --> M
+    A --> N
+    A --> O
+    A --> P
+```
 
 ---
 
-## 📂 Repository Structure
+## 🌟 Key Features
+
+* **💼 LinkedIn Studio (Influencer Pacing)**
+  - Generates posts with highly optimized hook placements and paragraph pacing.
+  - Custom JavaScript **Copy & Open** button copies the full formatting to clipboard and redirects to LinkedIn feed to bypass URL truncation bugs.
+  - Inline AI Image Generator and **Engagement Rate Analytics**.
+* **🐦 Twitter/X Thread Smith**
+  - Generates full character-capped threads with strong curiosity gaps.
+  - Integrated post scheduler and analytics.
+* **📸 Instagram & Reels Suite**
+  - Captions optimized for saves and shares.
+  - **Reels / Short Video Storyboarder** providing visual directions, voiceover script, and editor notes second-by-second.
+* **🧬 Voice DNA Extractor**
+  - Analyzes your previous posts to create a customizable style profile.
+* **🔬 Post Autopsy & Reverse Engineering**
+  - Feed your top-performing past posts to reverse-engineer their core templates.
+* **🎨 Visual Studio**
+  - Dynamic image generation with multiple aspect ratios (Portrait, Square, Landscape) powered by **Pollinations AI** (using Flux models).
+* **🔍 Profile Auditor**
+  - Direct Personal Brand Consultant scoring bios out of 10 and offering rewrite versions.
+* **🏷️ Hashtag Lab**
+  - Tier-structured reach sets (Broad, Niche, Targeted).
+* **📅 Content Scheduler**
+  - Save posts with scheduled dates and times. Stores data locally in `scheduled_posts.json` for custom queue exports.
+
+---
+
+## 📂 Project Directory Structure
 
 ```text
 growth_engine_app/
-├── app.py                  # Main application logic and UI
-├── requirements.txt        # Python dependencies
-├── .gitignore              # Security rules (prevents uploading keys)
-├── README.md               # Project documentation
-└── .streamlit/             # Configuration folder
-   ├── secrets.toml        # (Local) Stores your API Key (DO NOT COMMIT)
-   └── secrets.toml.example # Template for API key setup
-
+├── app.py                  # Main layout and tab controller
+├── requirements.txt        # Modular dependency listings
+├── scheduled_posts.json    # Local schedule cache (auto-created)
+├── components/             # Frontend UI Modules
+│   ├── shared.py           # Custom JS clipboard copying and sharing elements
+│   ├── sidebar.py          # Brand Voice controller and history manager
+│   └── styles.py           # Premium stylesheet injector
+├── config/                 # Configurations and Limits
+│   └── settings.py         # Model listings, Platform constraints, Banned words
+├── prompts/                # Dedicated prompt builders
+│   ├── engagement.py       # Engagement and readability analysis prompts
+│   ├── graphics.py         # Detailed graphic generators prompt
+│   ├── hashtag_lab.py      # Tiered hashtag strategies prompt
+│   ├── hooks.py            # Psychological hook rewriters
+│   ├── instagram.py        # Instagram captions prompt builder
+│   ├── linkedin.py         # LinkedIn viral pacing prompt builder
+│   ├── post_autopsy.py     # Reverse-engineering templates
+│   ├── profile_auditor.py  # Profile audit checklists
+│   ├── twitter.py          # Twitter/X thread formatting
+│   └── video_storyboard.py # Short-video storyboards & cues
+├── services/               # Core business utilities
+│   ├── gemini_service.py   # unified SDK Client (old & new SDK fallback)
+│   ├── pdf_export.py       # PDF document construction using ReportLab
+│   └── text_parser.py      # regex matching & tweet segment splitters
+└── tests/                  # Pytest validation suites
+    ├── test_gemini_service.py
+    └── test_text_parser.py
 ```
 
-## 🚀 Installation & Local Setup
+---
 
-Follow these steps to run the app on your own machine.
+## 🚀 Local Setup & Installation
 
-### 1. Clone the Repository
-
+### 1. Clone & Enter Repository
 ```bash
 git clone https://github.com/Shweta-Mishra-ai/growth_engine_app.git
 cd growth_engine_app
 ```
 
-### 2. Create Virtual Environment (Optional but Recommended)
-
-```bash
-python -m venv venv
-# Windows:
-venv\Scripts\activate
-# Mac/Linux:
-source venv/bin/activate
-```
-
-### 3. Install Dependencies
-
+### 2. Install Dependencies
+Ensure you have Python 3.10+ installed.
 ```bash
 pip install -r requirements.txt
 ```
 
-### 4. Configure API Key
-
-You need a free API key from Google.
-
-1. Get your key here: [Google AI Studio](https://aistudio.google.com/app/apikey)
-2. Create a folder named `.streamlit` in the root directory.
-3. Create a file named `secrets.toml` inside that folder.
-4. Add the following line:
-
+### 3. Setup Secrets
+Create a folder `.streamlit/` and place `secrets.toml` inside:
 ```toml
 # .streamlit/secrets.toml
 GOOGLE_API_KEY = "AIzaSy...[PASTE YOUR KEY HERE]"
 ```
 
-Or use the provided template:
+### 4. Run Testing Suite
+Before boot, verify imports and model mock pathways work correctly:
 ```bash
-cp .streamlit/secrets.toml.example .streamlit/secrets.toml
-```
-Then edit `secrets.toml` with your actual API key.
-
-### 5. Run the App
-
-```bash
-streamlit run app.py
+python -m pytest
 ```
 
-The app will open in your browser at `http://localhost:8501`.
-
----
-
-## ☁️ Deployment (Streamlit Cloud)
-
-Deploying this app for public use is free and takes less than 2 minutes.
-
-1. **Push to GitHub:** Ensure your code (excluding `.streamlit/secrets.toml`) is on GitHub.
-2. **Streamlit Cloud:** Log in to [share.streamlit.io](https://share.streamlit.io).
-3. **New App:** Click "New App" and select your repository.
-4. **Add Secrets (Crucial):**
-   - Before clicking "Deploy", click on **Advanced Settings**.
-   - Go to the **Secrets** field.
-   - Paste your API key in the TOML format:
-   ```toml
-   GOOGLE_API_KEY = "AIzaSy...[PASTE YOUR KEY HERE]"
-   ```
-5. **Deploy:** Click the **Deploy** button.
-
----
-
-## ❓ Troubleshooting
-
-| Issue | Fix |
-|-------|-----|
-| `ModuleNotFoundError: No module named 'google'` | Run `pip install -r requirements.txt` again. Ensure you are in the correct virtual environment. |
-| `API Key not found` | Check that your `.streamlit/secrets.toml` file exists and is spelled correctly. If on Cloud, check the "Secrets" settings in the dashboard. |
-| `Quota Exceeded` | The Gemini Free tier has limits (~60 requests/minute). Wait a minute and try again. |
-| `Content not appearing` | Check browser console for errors. Try refreshing the page. |
+### 5. Launch Streamlit Application
+```bash
+python -m streamlit run app.py
+```
 
 ---
 
 ## 🤝 Contributing
 
-Contributions are welcome!
-
-1. Fork the Project
-2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the Branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
-
----
-
-## 📄 License
-
-Distributed under the MIT License. See LICENSE for more information.
-
----
+Contributions are welcome! Feel free to branch, add features, and submit a Pull Request.
 
 Built with ❤️ by Shweta Mishra
