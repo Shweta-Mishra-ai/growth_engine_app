@@ -30,14 +30,25 @@ def render_char_counter(text: str, limit: int):
 
 def copy_and_share_linkedin_button(content: str, key: str):
     import urllib.parse
-    safe = content.replace("`", "\\`").replace("$", "\\$").replace("\n", "\\n").replace('"', '\\"')
+    safe = urllib.parse.quote(content)
     html_code = f"""
     <button id="{key}" class="custom-share-btn">📋 Copy Post & Open LinkedIn</button>
     <script>
     document.getElementById("{key}").addEventListener("click", function() {{
-        navigator.clipboard.writeText(`{safe}`).then(() => {{
-            window.open("https://www.linkedin.com/feed/?shareActive=true", "_blank");
-        }});
+        const text = decodeURIComponent("{safe}");
+        const ta = document.createElement("textarea");
+        ta.value = text;
+        ta.style.position = "fixed";
+        ta.style.opacity = "0";
+        document.body.appendChild(ta);
+        ta.select();
+        try {{
+            document.execCommand("copy");
+        }} catch (err) {{
+            console.error(err);
+        }}
+        document.body.removeChild(ta);
+        window.open("https://www.linkedin.com/feed/?shareActive=true", "_blank");
     }});
     </script>
     <style>
@@ -45,10 +56,10 @@ def copy_and_share_linkedin_button(content: str, key: str):
         background: linear-gradient(135deg, #0a66c2, #004182);
         color: white;
         border: none;
-        padding: 8px 16px;
+        padding: 10px 16px;
         border-radius: 8px;
         font-weight: 600;
-        font-size: 0.85rem;
+        font-size: 0.88rem;
         cursor: pointer;
         width: 100%;
         text-align: center;
@@ -70,14 +81,25 @@ def copy_and_share_linkedin_button(content: str, key: str):
 
 def copy_and_share_twitter_button(content: str, key: str):
     import urllib.parse
-    safe = content.replace("`", "\\`").replace("$", "\\$").replace("\n", "\\n").replace('"', '\\"')
+    safe = urllib.parse.quote(content)
     html_code = f"""
     <button id="{key}" class="custom-share-btn-tw">📋 Copy Thread & Open X/Twitter</button>
     <script>
     document.getElementById("{key}").addEventListener("click", function() {{
-        navigator.clipboard.writeText(`{safe}`).then(() => {{
-            window.open("https://twitter.com/intent/tweet", "_blank");
-        }});
+        const text = decodeURIComponent("{safe}");
+        const ta = document.createElement("textarea");
+        ta.value = text;
+        ta.style.position = "fixed";
+        ta.style.opacity = "0";
+        document.body.appendChild(ta);
+        ta.select();
+        try {{
+            document.execCommand("copy");
+        }} catch (err) {{
+            console.error(err);
+        }}
+        document.body.removeChild(ta);
+        window.open("https://twitter.com/intent/tweet", "_blank");
     }});
     </script>
     <style>
@@ -85,10 +107,10 @@ def copy_and_share_twitter_button(content: str, key: str):
         background: linear-gradient(135deg, #15202b, #000000);
         color: white;
         border: 1px solid #333;
-        padding: 8px 16px;
+        padding: 10px 16px;
         border-radius: 8px;
         font-weight: 600;
-        font-size: 0.85rem;
+        font-size: 0.88rem;
         cursor: pointer;
         width: 100%;
         text-align: center;

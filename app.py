@@ -174,19 +174,9 @@ with tab_li:
                 edited_post = st.text_area("Edit your post", value=post, height=250, key=f"edit_li_{i}")
                 render_char_counter(edited_post, LINKEDIN.char_limit)
 
-                # 1-Click Link with the edited content!
-                import urllib.parse
-                enc_li = urllib.parse.quote(edited_post)
-                li_share_url = f"https://www.linkedin.com/feed/?shareActive=true&text={enc_li}"
-                
-                st.markdown(
-                    f'<a href="{li_share_url}" target="_blank" '
-                    f'style="display:block;background:linear-gradient(135deg,#0a66c2,#004182);color:#fff;'
-                    f'padding:10px 16px;border-radius:8px;text-decoration:none;font-size:0.88rem;'
-                    f'font-weight:600;text-align:center;margin-bottom:12px;box-shadow:0 4px 12px rgba(10,102,194,0.2);'
-                    f'transition:all 0.3s ease;">🚀 1-Click Post to LinkedIn</a>',
-                    unsafe_allow_html=True
-                )
+                # 1-Click Copy and Share Button
+                copy_and_share_linkedin_button(edited_post, f"copy_share_li_{i}")
+                st.caption("💡 **Tip:** Clicking copies the post to clipboard and opens LinkedIn. Just paste (Ctrl+V) to post!")
                 
                 # Visual Generator for LinkedIn using edited post
                 with st.expander(f"🎨 Generate Visual for Post {i}"):
@@ -320,20 +310,9 @@ with tab_tw:
 
             st.markdown("<br>", unsafe_allow_html=True)
 
-            # 1-Click Link with the edited content!
-            import urllib.parse
-            enc_tw = urllib.parse.quote(edited_thread)
-            tw_share_url = f"https://twitter.com/intent/tweet?text={enc_tw}"
-            
-            st.markdown(
-                f'<a href="{tw_share_url}" target="_blank" '
-                f'style="display:block;background:linear-gradient(135deg,#15202b,#000000);color:#fff;'
-                f'padding:10px 16px;border-radius:8px;text-decoration:none;font-size:0.88rem;'
-                f'font-weight:600;text-align:center;margin-bottom:12px;border:1px solid #333;'
-                f'box-shadow:0 4px 12px rgba(0,0,0,0.2);'
-                f'transition:all 0.3s ease;">🚀 1-Click Post to X/Twitter</a>',
-                unsafe_allow_html=True
-            )
+            # 1-Click Copy and Share Button
+            copy_and_share_twitter_button(edited_thread, "copy_share_tw")
+            st.caption("💡 **Tip:** Clicking copies the thread to clipboard and opens X/Twitter. Just paste (Ctrl+V) to post!")
             
             # Engagement Analysis for Twitter using edited thread
             with st.expander("📊 Analyze Thread Engagement"):
