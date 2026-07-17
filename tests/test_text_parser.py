@@ -1,5 +1,4 @@
-import pytest
-from services.text_parser import extract_section, split_variations, split_numbered_tweets, char_count_status, build_content_markdown
+from services import extract_section, split_variations, split_numbered_tweets, char_count_status, build_content_markdown
 
 def test_extract_section():
     # Test extract_section with markdown headers
