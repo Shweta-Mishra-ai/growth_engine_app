@@ -143,10 +143,13 @@ with tab_li:
                 st.warning("Enter your idea first.")
             else:
                 with st.spinner("Writing your LinkedIn post…"):
-                    prompt = build_linkedin_prompt(
-                        li_topic, voice_instruction, li_audience,
-                        li_format, li_vars, li_cta
-                    )
+                    if li_format == "carousel":
+                        prompt = build_linkedin_carousel_prompt(li_topic, voice_instruction, num_slides=6)
+                    else:
+                        prompt = build_linkedin_prompt(
+                            li_topic, voice_instruction, li_audience,
+                            li_format, li_vars, li_cta
+                        )
                     result = gemini.generate(prompt, max_tokens=3000)
 
                 if result.success:
@@ -167,13 +170,26 @@ with tab_li:
                 if len(st.session_state["post_variations"]) > 1:
                     st.markdown(f"**Variation {i}**")
                 platform_badge("LinkedIn", "li")
-                st.markdown(f'<div class="output-box">{post}</div>', unsafe_allow_html=True)
-                render_char_counter(post, LINKEDIN.char_limit)
-
-                # Copy and Open LinkedIn
-                copy_and_share_linkedin_button(post, f"copy_share_li_{i}")
                 
-                # Visual Generator for LinkedIn
+                # Editable text area
+                edited_post = st.text_area("Edit your post", value=post, height=250, key=f"edit_li_{i}")
+                render_char_counter(edited_post, LINKEDIN.char_limit)
+
+                # 1-Click Link with the edited content!
+                import urllib.parse
+                enc_li = urllib.parse.quote(edited_post)
+                li_share_url = f"https://www.linkedin.com/feed/?shareActive=true&text={enc_li}"
+                
+                st.markdown(
+                    f'<a href="{li_share_url}" target="_blank" '
+                    f'style="display:block;background:linear-gradient(135deg,#0a66c2,#004182);color:#fff;'
+                    f'padding:10px 16px;border-radius:8px;text-decoration:none;font-size:0.88rem;'
+                    f'font-weight:600;text-align:center;margin-bottom:12px;box-shadow:0 4px 12px rgba(10,102,194,0.2);'
+                    f'transition:all 0.3s ease;">🚀 1-Click Post to LinkedIn</a>',
+                    unsafe_allow_html=True
+                )
+                
+                # Visual Generator for LinkedIn using edited post
                 with st.expander(f"🎨 Generate Visual for Post {i}"):
                     col_style, col_ratio = st.columns(2)
                     with col_style:
@@ -183,7 +199,7 @@ with tab_li:
                     
                     if st.button("✨ Generate Graphic", key=f"gen_img_btn_li_{i}"):
                         with st.spinner("Designing graphic prompt..."):
-                            prompt_input = build_graphic_prompt(post, "LinkedIn", img_style)
+                            prompt_input = build_graphic_prompt(edited_post, "LinkedIn", img_style)
                             p_result = gemini.generate(prompt_input, max_tokens=300)
                         
                         if p_result.success:
@@ -203,15 +219,19 @@ with tab_li:
                             with st.spinner("Rendering image..."):
                                 try:
                                     import requests
-                                    img_data = requests.get(image_url, timeout=30).content
-                                    st.image(img_data, use_container_width=True)
-                                    st.download_button(
-                                        label="⬇️ Download Graphic",
-                                        data=img_data,
-                                        file_name=f"linkedin_post_{i}_graphic.png",
-                                        mime="image/png",
-                                        key=f"dl_img_li_{i}"
-                                    )
+                                    resp = requests.get(image_url, timeout=30)
+                                    if resp.status_code == 200 and resp.headers.get("Content-Type", "").startswith("image/"):
+                                        img_data = resp.content
+                                        st.image(img_data, use_container_width=True)
+                                        st.download_button(
+                                            label="⬇️ Download Graphic",
+                                            data=img_data,
+                                            file_name=f"linkedin_post_{i}_graphic.png",
+                                            mime="image/png",
+                                            key=f"dl_img_li_{i}"
+                                        )
+                                    else:
+                                        st.error(f"Image generation server returned an error: status {resp.status_code}")
                                 except Exception as img_err:
                                     st.error(f"Failed to load image: {img_err}")
                         else:
@@ -221,7 +241,7 @@ with tab_li:
                 with st.expander(f"📊 Analyze Engagement Rate for Post {i}"):
                     if st.button("🔬 Analyze Engagement", key=f"eval_eng_li_{i}"):
                         with st.spinner("Analyzing post metrics..."):
-                            eng_prompt = build_engagement_analysis_prompt(post, "LinkedIn")
+                            eng_prompt = build_engagement_analysis_prompt(edited_post, "LinkedIn")
                             eng_result = gemini.generate(eng_prompt, max_tokens=1000)
                         if eng_result.success:
                             st.markdown(eng_result.text)
@@ -237,7 +257,7 @@ with tab_li:
                         sch_time = st.time_input("Time", key=f"sch_time_li_{i}")
                     
                     if st.button("📅 Save Schedule", key=f"sch_btn_li_{i}"):
-                        saved_post = save_scheduled_post("LinkedIn", post, sch_date, sch_time)
+                        saved_post = save_scheduled_post("LinkedIn", edited_post, sch_date, sch_time)
                         st.success(f"✅ Successfully scheduled for {sch_date} at {sch_time}!")
                 st.markdown("<br>", unsafe_allow_html=True)
         else:
@@ -284,32 +304,50 @@ with tab_tw:
             platform_badge("X / Twitter", "tw")
             full_thread = "\n\n".join(st.session_state["twitter_tweets"])
 
-            for tweet in st.session_state["twitter_tweets"]:
+            # Editable thread text area
+            edited_thread = st.text_area("Edit your thread (tweets separated by double-newlines)", value=full_thread, height=250, key="edit_tw")
+            
+            # Show live character counter alerts for each tweet in the edited thread
+            edited_tweets = [t.strip() for t in edited_thread.split("\n\n") if t.strip()]
+            for j, tweet in enumerate(edited_tweets, 1):
                 s = char_count_status(tweet, TWITTER.char_limit)
                 border = "#ef4444" if s["is_over"] else "#1d9bf0"
                 st.markdown(
-                    f'<div class="output-box" style="border-left:3px solid {border};">{tweet}</div>',
+                    f'<div style="font-size:0.75rem;color:var(--muted);margin-top:8px;">Tweet {j} ({len(tweet)} / {TWITTER.char_limit} chars):</div>',
                     unsafe_allow_html=True
                 )
-                render_char_counter(tweet, TWITTER.char_limit)
+                if s["is_over"]:
+                    st.error(f"⚠️ Tweet {j} exceeds Twitter's character limit!")
 
             st.markdown("<br>", unsafe_allow_html=True)
 
-            # Copy and Open Twitter
-            copy_and_share_twitter_button(full_thread, "copy_share_tw")
+            # 1-Click Link with the edited content!
+            import urllib.parse
+            enc_tw = urllib.parse.quote(edited_thread)
+            tw_share_url = f"https://twitter.com/intent/tweet?text={enc_tw}"
             
-            # Engagement Analysis for Twitter
+            st.markdown(
+                f'<a href="{tw_share_url}" target="_blank" '
+                f'style="display:block;background:linear-gradient(135deg,#15202b,#000000);color:#fff;'
+                f'padding:10px 16px;border-radius:8px;text-decoration:none;font-size:0.88rem;'
+                f'font-weight:600;text-align:center;margin-bottom:12px;border:1px solid #333;'
+                f'box-shadow:0 4px 12px rgba(0,0,0,0.2);'
+                f'transition:all 0.3s ease;">🚀 1-Click Post to X/Twitter</a>',
+                unsafe_allow_html=True
+            )
+            
+            # Engagement Analysis for Twitter using edited thread
             with st.expander("📊 Analyze Thread Engagement"):
                 if st.button("🔬 Analyze Engagement", key="eval_eng_tw"):
                     with st.spinner("Analyzing thread metrics..."):
-                        eng_prompt = build_engagement_analysis_prompt(full_thread, "Twitter/X")
+                        eng_prompt = build_engagement_analysis_prompt(edited_thread, "Twitter/X")
                         eng_result = gemini.generate(eng_prompt, max_tokens=1000)
                     if eng_result.success:
                         st.markdown(eng_result.text)
                     else:
                         st.error(eng_result.error_message)
 
-            # Scheduler for Twitter
+            # Scheduler for Twitter using edited thread
             with st.expander("📅 Schedule Thread"):
                 col_d, col_t = st.columns(2)
                 with col_d:
@@ -318,10 +356,10 @@ with tab_tw:
                     sch_time = st.time_input("Time", key="sch_time_tw")
                 
                 if st.button("📅 Save Schedule", key="sch_btn_tw"):
-                    saved_post = save_scheduled_post("Twitter/X", full_thread, sch_date, sch_time)
+                    saved_post = save_scheduled_post("Twitter/X", edited_thread, sch_date, sch_time)
                     st.success(f"✅ Successfully scheduled for {sch_date} at {sch_time}!")
             
-            # Visual Generator for Twitter
+            # Visual Generator for Twitter using edited thread
             with st.expander("🎨 Generate Visual for Thread"):
                 col_style, col_ratio = st.columns(2)
                 with col_style:
@@ -331,7 +369,7 @@ with tab_tw:
                 
                 if st.button("✨ Generate Graphic", key="gen_img_btn_tw"):
                     with st.spinner("Designing graphic prompt..."):
-                        prompt_input = build_graphic_prompt(full_thread[:1000], "Twitter/X", img_style_tw)
+                        prompt_input = build_graphic_prompt(edited_thread[:1000], "Twitter/X", img_style_tw)
                         p_result = gemini.generate(prompt_input, max_tokens=300)
                     
                     if p_result.success:
@@ -349,15 +387,19 @@ with tab_tw:
                         with st.spinner("Rendering image..."):
                             try:
                                 import requests
-                                img_data = requests.get(image_url, timeout=30).content
-                                st.image(img_data, use_container_width=True)
-                                st.download_button(
-                                    label="⬇️ Download Graphic",
-                                    data=img_data,
-                                    file_name="twitter_thread_graphic.png",
-                                    mime="image/png",
-                                    key="dl_img_tw"
-                                )
+                                resp = requests.get(image_url, timeout=30)
+                                if resp.status_code == 200 and resp.headers.get("Content-Type", "").startswith("image/"):
+                                    img_data = resp.content
+                                    st.image(img_data, use_container_width=True)
+                                    st.download_button(
+                                        label="⬇️ Download Graphic",
+                                        data=img_data,
+                                        file_name="twitter_thread_graphic.png",
+                                        mime="image/png",
+                                        key="dl_img_tw"
+                                    )
+                                else:
+                                    st.error(f"Image generation failed: Server returned status {resp.status_code}")
                             except Exception as img_err:
                                 st.error(f"Failed to load image: {img_err}")
                     else:
@@ -415,21 +457,29 @@ with tab_ig:
             story = extract_section(raw, ["STORY TEASER", "STORY HOOK"])
 
             platform_badge("Instagram", "ig")
+            
+            # Version A (Editable)
             st.markdown("**Version A**")
-            st.markdown(f'<div class="output-box">{ver_a}</div>', unsafe_allow_html=True)
-            render_char_counter(ver_a, INSTAGRAM.char_limit)
-            copy_button(ver_a, "copy_ig_a", "📋 Copy Version A")
+            edited_ver_a = st.text_area("Edit Version A", value=ver_a, height=180, key="edit_ig_a")
+            render_char_counter(edited_ver_a, INSTAGRAM.char_limit)
 
+            # Version B (Editable)
             st.markdown("<br>**Version B**")
-            st.markdown(f'<div class="output-box">{ver_b}</div>', unsafe_allow_html=True)
-            copy_button(ver_b, "copy_ig_b", "📋 Copy Version B")
+            edited_ver_b = st.text_area("Edit Version B", value=ver_b, height=180, key="edit_ig_b")
+            render_char_counter(edited_ver_b, INSTAGRAM.char_limit)
 
             if story and story != raw:
                 st.markdown("<br>**Story Teaser**")
-                st.markdown(f'<div class="output-box">{story}</div>', unsafe_allow_html=True)
-                copy_button(story, "copy_ig_story", "📋 Copy Story Teaser")
+                edited_story = st.text_area("Edit Story Teaser", value=story, height=100, key="edit_ig_story")
+                render_char_counter(edited_story, INSTAGRAM.char_limit)
 
-            # Visual Generator for Instagram
+            st.divider()
+            
+            # Active version selector for downstream modules
+            active_version = st.selectbox("Select which version to process below:", ["Version A", "Version B"], key="ig_active_version")
+            active_content = edited_ver_a if active_version == "Version A" else edited_ver_b
+
+            # Visual Generator for Instagram using active content
             with st.expander("🎨 Generate Visual for Instagram"):
                 col_style_ig, col_ratio_ig = st.columns(2)
                 with col_style_ig:
@@ -439,7 +489,7 @@ with tab_ig:
                 
                 if st.button("✨ Generate Caption Graphic", key="gen_img_btn_ig"):
                     with st.spinner("Designing graphic prompt..."):
-                        prompt_input = build_graphic_prompt(raw, "Instagram", img_style_ig)
+                        prompt_input = build_graphic_prompt(active_content, "Instagram", img_style_ig)
                         p_result = gemini.generate(prompt_input, max_tokens=300)
                     
                     if p_result.success:
@@ -457,32 +507,36 @@ with tab_ig:
                         with st.spinner("Rendering image..."):
                             try:
                                 import requests
-                                img_data = requests.get(image_url, timeout=30).content
-                                st.image(img_data, use_container_width=True)
-                                st.download_button(
-                                    label="⬇️ Download Graphic",
-                                    data=img_data,
-                                    file_name="instagram_post_graphic.png",
-                                    mime="image/png",
-                                    key="dl_img_ig"
-                                )
+                                resp = requests.get(image_url, timeout=30)
+                                if resp.status_code == 200 and resp.headers.get("Content-Type", "").startswith("image/"):
+                                    img_data = resp.content
+                                    st.image(img_data, use_container_width=True)
+                                    st.download_button(
+                                        label="⬇️ Download Graphic",
+                                        data=img_data,
+                                        file_name="instagram_post_graphic.png",
+                                        mime="image/png",
+                                        key="dl_img_ig"
+                                    )
+                                else:
+                                    st.error(f"Image generation failed: Server returned status {resp.status_code}")
                             except Exception as img_err:
                                 st.error(f"Failed to load image: {img_err}")
                     else:
                         st.error(f"Failed to generate prompt: {p_result.error_message}")
 
-            # Engagement Analysis for Instagram
+            # Engagement Analysis for Instagram using active content
             with st.expander("📊 Analyze Instagram Engagement"):
                 if st.button("🔬 Analyze Engagement", key="eval_eng_ig"):
                     with st.spinner("Analyzing caption metrics..."):
-                        eng_prompt = build_engagement_analysis_prompt(raw, "Instagram")
+                        eng_prompt = build_engagement_analysis_prompt(active_content, "Instagram")
                         eng_result = gemini.generate(eng_prompt, max_tokens=1000)
                     if eng_result.success:
                         st.markdown(eng_result.text)
                     else:
                         st.error(eng_result.error_message)
 
-            # Scheduler for Instagram
+            # Scheduler for Instagram using active content
             with st.expander("📅 Schedule Instagram Post"):
                 col_d, col_t = st.columns(2)
                 with col_d:
@@ -491,19 +545,18 @@ with tab_ig:
                     sch_time = st.time_input("Time", key="sch_time_ig")
                 
                 if st.button("📅 Save Schedule", key="sch_btn_ig"):
-                    saved_post = save_scheduled_post("Instagram", raw, sch_date, sch_time)
+                    saved_post = save_scheduled_post("Instagram", active_content, sch_date, sch_time)
                     st.success(f"✅ Successfully scheduled for {sch_date} at {sch_time}!")
             
-            # Video Storyboarder for Reels/TikToks
+            # Video Storyboarder for Reels/TikToks using active content
             with st.expander("📹 Reels / Short Video Storyboarder"):
                 v_duration = st.slider("Video Duration (seconds)", 15, 60, 30, key="v_duration_ig")
                 if st.button("🎬 Generate Storyboard & Script", key="gen_storyboard_btn"):
                     with st.spinner("Writing video storyboard & script..."):
-                        v_prompt = build_video_storyboard_prompt(raw[:1000], voice_instruction, v_duration)
+                        v_prompt = build_video_storyboard_prompt(active_content[:1000], voice_instruction, v_duration)
                         v_result = gemini.generate(v_prompt, max_tokens=1500)
                     if v_result.success:
                         st.markdown(v_result.text)
-                        copy_button(v_result.text, "copy_storyboard", "📋 Copy Storyboard")
                     else:
                         st.error(v_result.error_message)
 
@@ -815,15 +868,19 @@ with tab_visuals:
             with st.spinner("Rendering your image..."):
                 try:
                     import requests
-                    img_data = requests.get(st.session_state["v_image_url"], timeout=30).content
-                    st.image(img_data, use_container_width=True)
-                    st.download_button(
-                        label="⬇️ Download Graphic",
-                        data=img_data,
-                        file_name="growth_engine_graphic.png",
-                        mime="image/png",
-                        key="dl_v_image"
-                    )
+                    resp = requests.get(st.session_state["v_image_url"], timeout=30)
+                    if resp.status_code == 200 and resp.headers.get("Content-Type", "").startswith("image/"):
+                        img_data = resp.content
+                        st.image(img_data, use_container_width=True)
+                        st.download_button(
+                            label="⬇️ Download Graphic",
+                            data=img_data,
+                            file_name="growth_engine_graphic.png",
+                            mime="image/png",
+                            key="dl_v_image"
+                        )
+                    else:
+                        st.error(f"Image generation failed: Server returned status {resp.status_code}")
                 except Exception as e:
                     st.error(f"Could not load image: {e}")
         else:

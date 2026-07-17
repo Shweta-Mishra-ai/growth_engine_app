@@ -5,16 +5,16 @@ BANNED = ", ".join(f'"{p}"' for p in BANNED_PHRASES)
 
 def build_twitter_thread_prompt(topic, voice_instruction, num_tweets=6, account_type="personal"):
     tone = (
-        "Casual, direct, conversational — like texting a smart friend. No corporate tone whatsoever."
+        "Casual, direct, razor-sharp, and conversational — like texting an industry leader. Absolutely no corporate fluff."
         if account_type == "personal"
-        else "Confident and professional but still punchy — not corporate."
+        else "Confident, professional, punchy, and authoritative — concise and high-impact."
     )
 
-    return f"""You are a Twitter/X thread writer. Your threads regularly go viral in tech and startup circles.
+    return f"""You are a master Twitter/X ghostwriter. Your threads are read by founders, VCs, and tech leaders, routinely going viral and generating thousands of bookmarks.
 
 ═══ TASK ═══
-Write a complete {num_tweets}-tweet thread about the topic below.
-Every single tweet MUST be under {TWITTER.char_limit} characters. This is a HARD LIMIT — count carefully.
+Write a complete, high-quality, and highly engaging {num_tweets}-tweet thread about the topic below.
+Every single tweet MUST be under {TWITTER.char_limit} characters. This is a HARD limit — count carefully.
 
 ═══ TOPIC ═══
 {topic}
@@ -25,41 +25,31 @@ Tone: {tone}
 
 ═══ THREAD STRUCTURE ═══
 
-TWEET 1 — THE HOOK (most important):
-→ Under 240 chars (shorter = better for hooks)
-→ Must create a CURIOSITY GAP — reader must click "Show thread" to get the payoff
-→ Do NOT give away the main point in tweet 1
-→ Do NOT add hashtags to tweet 1
-→ Options: bold claim that needs explaining, surprising fact, counterintuitive opener, "here's what nobody tells you about X"
-→ End with a colon or "Thread 🧵" to signal more is coming
+TWEET 1 — THE HOOK:
+→ Must make someone stop mid-scroll. State a high-impact outcome, a contrarian perspective, a shocking stat, or a vulnerable failure.
+→ Under 240 chars. Keep it short and punchy.
+→ Do NOT give away the main lesson in tweet 1. Create a curiosity gap.
+→ NEVER start with introduction filler (e.g., "I wanted to share...", "Here is a thread on...").
+→ End with "Thread 🧵" or "A short story:" or a colon to lead into the next tweet.
 
-TWEETS 2 to {num_tweets - 1} — THE VALUE:
-→ Each tweet delivers EXACTLY ONE insight, tip, or story beat
-→ Under {TWITTER.char_limit} chars each — NON-NEGOTIABLE
-→ Short punchy sentences — 1-2 sentences per tweet
-→ Each tweet must work as a standalone thought AND connect to the next
-→ Use line breaks within a tweet for emphasis if needed
-→ Be SPECIFIC: numbers, names, concrete examples always outperform generalities
+TWEETS 2 to {num_tweets - 1} — THE BODY & VALUE:
+→ Each tweet must deliver exactly ONE specific lesson, case study detail, or action step.
+→ Use bullet points and lists to make it highly scannable.
+→ Bold key phrases (using plain text capitalization or simple formatting syntax) for emphasis.
+→ Use short line breaks. Do not write large blocks of text.
+→ Connect each tweet organically to the next (keep the reader scrolling).
 
-TWEET {num_tweets} — THE CLOSE:
-→ Summarize the single most important takeaway in 1-2 sentences
-→ Ask ONE genuine question to spark replies
-→ Add 2 hashtags MAXIMUM (Twitter culture — more looks spammy)
+TWEET {num_tweets} — THE CONCLUSION & CTA:
+→ Summarize the core takeaway in 1 punchy sentence.
+→ Add a specific, interesting question that invites discussion/replies (avoid generic "What do you think?").
+→ Place exactly 1 or 2 highly relevant hashtags at the very end of this last tweet (NO hashtags on earlier tweets).
 
-═══ TWITTER VS LINKEDIN ═══
-This is NOT a LinkedIn post formatted differently.
-Twitter is:
-• Shorter (hard 280 limit per tweet)
-• More opinionated (stronger takes)
-• More casual (contractions, direct address)
-• Less "professional storytelling", more "punchy observations"
-
-═══ BANNED ═══
+═══ BANNED PHRASES ═══
 {BANNED}
-Also banned on Twitter: corporate tone, "I'm excited to share", long paragraphs
+Also banned: corporate jargon, emojis at the start of every sentence (use max 1-2 per tweet), generic greetings.
 
 ═══ OUTPUT FORMAT ═══
-Use EXACTLY this format — no other text before or after:
+Provide exactly this format, with no preamble:
 
 1/ [tweet text]
 
@@ -71,7 +61,7 @@ Use EXACTLY this format — no other text before or after:
 
 {num_tweets}/ [tweet text]
 
-Now write the thread. Count chars before each tweet to make sure it's under {TWITTER.char_limit}."""
+Now write the thread. Ensure every single tweet is under {TWITTER.char_limit} characters."""
 
 
 def build_single_tweet_prompt(topic, voice_instruction, variations=5):

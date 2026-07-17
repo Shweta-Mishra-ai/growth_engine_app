@@ -31,6 +31,7 @@ LINKEDIN_FORMATS = {
     "listicle":          "Hook → Numbered List (5-7 items) → Takeaway → Question",
     "data_driven":       "Surprising Stat → Context → Implication → Question",
     "case_study":        "Before State → What Changed → After State → Question",
+    "carousel":          "Carousel (multi-slide) Slide Deck — Slide-by-slide structure",
 }
 
 MAX_HISTORY_ENTRIES = 50

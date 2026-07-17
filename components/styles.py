@@ -5,8 +5,7 @@ def inject_custom_css():
     st.markdown("""<style>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;700&display=swap');
 :root{--bg:#0d0f14;--surface:#161a22;--surface2:#1e2330;--border:#2a3040;--accent:#6366f1;--accent2:#8b5cf6;--gold:#f59e0b;--text:#e2e8f0;--muted:#64748b;}
-.stApp,.main{background:var(--bg)!important;}
-html,body,[class*="css"]{font-family:'Inter',sans-serif;color:var(--text);}
+html,body,[class*="css"]{font-family:'Inter',sans-serif;}
 #MainMenu,footer,header{visibility:hidden;}
 .block-container{padding:1.5rem 2rem 3rem!important;max-width:1400px!important;}
 .ge-header{background:linear-gradient(135deg,#1a1f2e 0%,#0d0f14 100%);border:1px solid var(--border);border-radius:16px;padding:2rem 2.5rem;margin-bottom:1.5rem;position:relative;overflow:hidden;}
@@ -26,9 +25,7 @@ html,body,[class*="css"]{font-family:'Inter',sans-serif;color:var(--text);}
 .stButton>button{border-radius:8px!important;font-weight:600!important;font-size:0.85rem!important;height:2.6em!important;border:none!important;width:100%;}
 .stButton>button[kind="primary"]{background:linear-gradient(135deg,var(--accent),var(--accent2))!important;color:#fff!important;}
 .stButton>button[kind="secondary"]{background:var(--surface2)!important;color:var(--text)!important;border:1px solid var(--border)!important;}
-.stTextArea textarea,.stTextInput input{background:var(--surface2)!important;border:1px solid var(--border)!important;border-radius:8px!important;color:var(--text)!important;}
-.stSelectbox>div>div{background:var(--surface2)!important;border:1px solid var(--border)!important;border-radius:8px!important;color:var(--text)!important;}
-section[data-testid="stSidebar"]{background:var(--surface)!important;border-right:1px solid var(--border)!important;}
+section[data-testid="stSidebar"]{border-right:1px solid var(--border)!important;}
 .empty-card{text-align:center;padding:3rem 1rem;background:var(--surface);border:1px solid var(--border);border-radius:12px;}
 .empty-card-icon{font-size:2rem;margin-bottom:0.75rem;}
 .empty-card-text{color:#64748b;font-size:0.9rem;}
