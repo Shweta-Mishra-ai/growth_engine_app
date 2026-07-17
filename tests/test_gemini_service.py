@@ -1,7 +1,7 @@
 import pytest
 from unittest.mock import MagicMock, patch
 import sys
-from services.gemini_service import GeminiService, GenerationResult
+from services import GeminiService, GenerationResult
 
 def test_gemini_service_init_missing_key():
     with pytest.raises(ValueError, match="API key required"):
