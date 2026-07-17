@@ -1,6 +1,6 @@
-from .text_parser import extract_section, split_variations, split_numbered_tweets, char_count_status, build_content_markdown
+from .text_parser import extract_section, split_variations, split_numbered_tweets, char_count_status, build_content_markdown, clean_image_prompt
 from .gemini_service import GeminiService, GenerationResult
 __all__ = [
     "extract_section", "split_variations", "split_numbered_tweets",
-    "char_count_status", "build_content_markdown", "GeminiService", "GenerationResult"
+    "char_count_status", "build_content_markdown", "clean_image_prompt", "GeminiService", "GenerationResult"
 ]

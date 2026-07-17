@@ -11,7 +11,7 @@ from prompts import (
     build_hashtag_research_prompt, build_engagement_analysis_prompt,
     build_video_storyboard_prompt,
 )
-from services import GeminiService, extract_section, split_variations, split_numbered_tweets, char_count_status, build_content_markdown
+from services import GeminiService, extract_section, split_variations, split_numbered_tweets, char_count_status, build_content_markdown, clean_image_prompt
 from components.styles import inject_custom_css
 from components.sidebar import render_sidebar
 from components.shared import (
@@ -192,7 +192,7 @@ with tab_li:
                             p_result = gemini.generate(prompt_input, max_tokens=300)
                         
                         if p_result.success:
-                            img_prompt = p_result.text.strip()
+                            img_prompt = clean_image_prompt(p_result.text)
                             st.caption(f"**Visual Prompt:** {img_prompt}")
                             
                             import urllib.parse
@@ -351,7 +351,7 @@ with tab_tw:
                         p_result = gemini.generate(prompt_input, max_tokens=300)
                     
                     if p_result.success:
-                        img_prompt = p_result.text.strip()
+                        img_prompt = clean_image_prompt(p_result.text)
                         st.caption(f"**Visual Prompt:** {img_prompt}")
                         
                         import urllib.parse
@@ -471,7 +471,7 @@ with tab_ig:
                         p_result = gemini.generate(prompt_input, max_tokens=300)
                     
                     if p_result.success:
-                        img_prompt = p_result.text.strip()
+                        img_prompt = clean_image_prompt(p_result.text)
                         st.caption(f"**Visual Prompt:** {img_prompt}")
                         
                         import urllib.parse
@@ -819,7 +819,7 @@ with tab_visuals:
                     p_result = gemini.generate(prompt_input, max_tokens=300)
                     
                 if p_result.success:
-                    v_prompt = p_result.text.strip()
+                    v_prompt = clean_image_prompt(p_result.text)
                     st.session_state["v_generated_prompt"] = v_prompt
                     
                     # Compute width/height

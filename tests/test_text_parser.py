@@ -1,4 +1,4 @@
-from services import extract_section, split_variations, split_numbered_tweets, char_count_status, build_content_markdown
+from services import extract_section, split_variations, split_numbered_tweets, char_count_status, build_content_markdown, clean_image_prompt
 
 def test_extract_section():
     # Test extract_section with markdown headers
@@ -55,4 +55,22 @@ def test_build_content_markdown():
     assert "Hello LinkedIn!" in md
     assert "Hello Twitter!" in md
     assert "2026-07-17 12:00" in md
+
+
+def test_clean_image_prompt():
+    # Test markdown block stripping
+    p1 = "```\nAn isometric modern illustration of a developer\n```"
+    assert clean_image_prompt(p1) == "An isometric modern illustration of a developer"
+    
+    # Test bold headers and prefixes
+    p2 = "**Image Generation Prompt:** A realistic photo of an office"
+    assert clean_image_prompt(p2) == "A realistic photo of an office"
+    
+    p3 = "Visual Prompt: A minimalist design"
+    assert clean_image_prompt(p3) == "A minimalist design"
+    
+    # Test wrapped quotes
+    p4 = '"A 3D render of a coin"'
+    assert clean_image_prompt(p4) == "A 3D render of a coin"
+
 

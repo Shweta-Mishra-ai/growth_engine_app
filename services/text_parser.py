@@ -47,3 +47,44 @@ def build_content_markdown(entries: list) -> str:
         md.append("\n---\n")
         
     return "\n".join(md)
+
+
+def clean_image_prompt(prompt_text: str) -> str:
+    text = prompt_text.strip()
+    if text.startswith("```"):
+        lines = text.split("\n")
+        if lines[0].startswith("```"):
+            lines = lines[1:]
+        if lines and lines[-1].startswith("```"):
+            lines = lines[:-1]
+        text = "\n".join(lines).strip()
+    
+    cleaned = text
+    while cleaned and cleaned[0] in "*# \t\n":
+        cleaned = cleaned[1:]
+        
+    prefixes = [
+        "image generation prompt:",
+        "image prompt:",
+        "graphic prompt:",
+        "visual prompt:",
+        "here is the prompt:",
+        "here is the image generation prompt:",
+        "prompt:"
+    ]
+    
+    lower_cleaned = cleaned.lower()
+    for prefix in prefixes:
+        if lower_cleaned.startswith(prefix):
+            cleaned = cleaned[len(prefix):].strip()
+            lower_cleaned = cleaned.lower()
+            
+    while cleaned and cleaned[0] in " \t:-*#\n":
+        cleaned = cleaned[1:]
+        
+    if cleaned.startswith('"') and cleaned.endswith('"'):
+        cleaned = cleaned[1:-1].strip()
+    if cleaned.startswith("'") and cleaned.endswith("'"):
+        cleaned = cleaned[1:-1].strip()
+        
+    return cleaned.strip()
