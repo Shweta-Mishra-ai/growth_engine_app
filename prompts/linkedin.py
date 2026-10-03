@@ -2,32 +2,69 @@ from config import BANNED_PHRASES, LINKEDIN_FORMATS
 
 BANNED = ", ".join(f'"{p}"' for p in BANNED_PHRASES)
 
+HOOK_EXAMPLES = """\
+PROVEN / GOOD HOOKS (study the PATTERN, not the words):
+  ✅ "I got fired 3 times before 30. Best thing that ever happened."
+  ✅ "We hit $50k MRR in 6 months. Zero ads. Here's the exact playbook:"
+  ✅ "I spent $47,000 on a mistake most founders make in month 2."
+  ✅ "99% of productivity advice is wrong. Here's what actually works."
+  ✅ "Nobody talks about the 6 months before success. I will."
+  ✅ "I almost quit on a Tuesday. This is what changed my mind."
 
-def build_linkedin_prompt(topic, voice_instruction, audience, format_style, num_variations=1, include_cta=True):
+WHAT MAKES THEM WORK:
+  → Specific numbers create instant credibility ($47k, 6 months, 99%)
+  → Tension or contradiction makes people need to know more
+  → Personal vulnerability earns trust before asking for attention
+  → Promise of insight the reader hasn't seen before
+
+HOOKS TO NEVER WRITE:
+  ❌ "I'm excited to share some thoughts on leadership today."
+  ❌ "In today's rapidly evolving business landscape..."
+  ❌ "I wanted to take a moment to discuss something important."
+  ❌ "As a professional with X years of experience..."
+  ❌ "Great news! We've just launched..."
+"""
+
+
+def build_linkedin_prompt(
+    topic: str,
+    voice_instruction: str,
+    audience: str,
+    format_style: str,
+    num_variations: int = 1,
+    include_cta: bool = True,
+) -> str:
     fmt = LINKEDIN_FORMATS.get(format_style, LINKEDIN_FORMATS["hook_story_lesson"])
-    cta = "End with a genuine question that invites comments — make it feel natural, not forced." if include_cta else "No CTA needed."
-    aud = f"Target audience: {audience}" if audience and audience.strip() else "Target audience: professionals and builders on LinkedIn"
+    aud = f"Target audience: {audience}" if audience and audience.strip() else "Target audience: professionals, founders, and builders on LinkedIn"
+    cta = (
+        "End with a specific, genuine question that makes readers want to share their own experience. "
+        "NOT 'What do you think?' — something like 'What's the lesson you wish someone had told you earlier?' "
+        "or 'Which of these would you add?'"
+    ) if include_cta else "No CTA needed."
 
     variation_block = ""
     if num_variations > 1:
         variation_block = f"""
----
-Generate {num_variations} COMPLETELY DIFFERENT variations of this post.
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+GENERATE {num_variations} COMPLETELY DIFFERENT VARIATIONS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 Each variation MUST:
-- Use a DIFFERENT opening hook (different psychological approach each time)
-- Take a DIFFERENT angle on the same topic
-- Have a DIFFERENT structure or format
-- NOT be a minor reword of another variation — genuinely distinct
+• Use a DIFFERENT hook style (story hook ≠ stat hook ≠ contrarian hook)
+• Take a DIFFERENT angle on the topic
+• Feel like it was written by the same person on a different day
+• NOT be a reword of another variation — genuinely distinct content
 
-Separate each variation with this exact line (nothing else on that line):
+Separate variations with EXACTLY this line (nothing else on that line):
 ===VARIATION===
----"""
+"""
 
-    return f"""You are a world-class LinkedIn ghostwriter. You write for founders, executives, and builders whose posts regularly get 500+ comments and go viral.
+    return f"""You are a world-class LinkedIn ghostwriter. Your posts regularly generate 500+ comments and go viral in professional feeds.
+
+{HOOK_EXAMPLES}
 
 ═══ TASK ═══
 Write a HIGH-QUALITY, COMPLETE LinkedIn post about the topic below.
-The post must be LONG ENOUGH to deliver real value — minimum 150 words, ideally 200-300 words.
+The post must be LONG ENOUGH to deliver real value — minimum 180 words, ideally 200-300 words.
 A short post that doesn't deliver value is WORSE than no post.
 
 ═══ TOPIC ═══
@@ -36,7 +73,7 @@ A short post that doesn't deliver value is WORSE than no post.
 ═══ FORMAT TO FOLLOW ═══
 {fmt}
 
-═══ VOICE ═══
+═══ VOICE & TONE ═══
 {voice_instruction}
 
 ═══ AUDIENCE ═══
@@ -45,61 +82,24 @@ A short post that doesn't deliver value is WORSE than no post.
 ═══ CTA ═══
 {cta}
 
-═══ LINKEDIN ALGORITHM — APPLY THIS ═══
-• First 2 lines are EVERYTHING — they show before "see more" cutoff on mobile
-• Line breaks between every 1-2 sentences — this is how LinkedIn renders on mobile
-• Specific numbers and concrete details ALWAYS outperform vague generalities
-• Personal story/vulnerability earns 3x more comments than generic advice
-• A strong question at the end = comments = algorithm boost
+═══ ALGORITHMIC RULES FOR HIGH REACH ═══
+• Line 1-2 MUST be a scroll-stopping hook (see Proven / Good Hooks above)
+• Blank line between EVERY 1-2 sentences for mobile readability
+• Cut ALL corporate fluff and jargon (game-changer, synergy, etc.)
+• Specific numbers always beat generalities ($47k, 6 months, 99%)
+• Emojis: 0-2 MAXIMUM, only if they genuinely add meaning (not decoration)
+• End with a genuine question to trigger comment velocity
+• Include 3-5 relevant hashtags on the final line only
 
-═══ STRUCTURE (follow this exactly) ═══
-
-LINE 1-2: SCROLL-STOPPING HOOK
-→ Must make someone stop mid-scroll
-→ Options: bold claim, surprising stat, vulnerable admission, tension/conflict, counterintuitive statement
-→ NEVER start with: "I'm excited", "Great news", "I'm happy to share", "Today I want to"
-
-[blank line]
-
-BODY (5-8 short paragraphs):
-→ Each paragraph: 1-3 sentences MAX
-→ Blank line between EVERY paragraph
-→ Tell the story / share the insight / break down the list
-→ Be SPECIFIC: name real numbers, real situations, real outcomes
-→ Build to a clear takeaway or lesson
-
-[blank line]
-
-CLOSING LINE:
-→ Summarize the core lesson in 1 punchy sentence
-
-[blank line]
-
-QUESTION FOR COMMENTS:
-→ One genuine question that makes readers want to share their experience
-→ NOT "What do you think?" — something specific and interesting
-
-[blank line]
-
-HASHTAGS:
-→ 3-5 relevant hashtags on the LAST line only
-
-═══ BANNED PHRASES (never use these) ═══
+═══ BANNED PHRASES (NEVER USE) ═══
 {BANNED}
-
-═══ QUALITY CHECK ═══
-Before writing, ask yourself:
-• Is the hook genuinely scroll-stopping?
-• Does the body deliver REAL value or just filler?
-• Is it specific enough (names, numbers, concrete details)?
-• Would I personally share this post?
 
 {variation_block}
 
-Now write the post(s). Output ONLY the post content — zero preamble, zero meta-commentary."""
+Write the post(s) now. Output ONLY the post content — zero preamble, zero explanation, zero meta-commentary."""
 
 
-def build_linkedin_carousel_prompt(topic, voice_instruction, num_slides=6):
+def build_linkedin_carousel_prompt(topic: str, voice_instruction: str, num_slides: int = 6) -> str:
     return f"""You are a LinkedIn carousel strategist. Document posts get 39% more reach than standard posts.
 
 TOPIC: {topic}
