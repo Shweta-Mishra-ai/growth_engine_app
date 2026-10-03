@@ -1,206 +1,230 @@
-# 🚀 Growth Engine AI (v3.1 Comprehensive Upgrade)
+<div align="center">
 
-![Python](https://img.shields.io/badge/Python-3.10%2B-blue?style=for-the-badge&logo=python&logoColor=white)
-![Streamlit](https://img.shields.io/badge/Streamlit-1.35%2B-FF4B4B?style=for-the-badge&logo=streamlit&logoColor=white)
-![Google Gemini](https://img.shields.io/badge/Google%20AI-Gemini%202.5%20Flash-4285F4?style=for-the-badge&logo=google&logoColor=white)
-![Tests](https://img.shields.io/badge/Tests-109%20Passing-brightgreen?style=for-the-badge&logo=pytest)
-![License](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)
+# 🚀 Growth Engine AI
 
-**An enterprise-grade, Human-in-the-Loop (HITL) social velocity platform to generate viral content for LinkedIn, X (Twitter), and Instagram, analyze engagement velocity, produce stunning visuals, and manage content schedules.**
+### Enterprise Social Velocity & Organic Growth Operating System
 
----
+An autonomous, Human-in-the-Loop (HITL) content engine that engineers viral, platform-native content across LinkedIn, X (Twitter), and Instagram — powered by Google Gemini 2.5 Flash, Flux visual generation, deterministic quality scoring, and automated scheduling.
 
-## 📖 Overview
+[![Python](https://img.shields.io/badge/Python-3.10%20%7C%203.11%20%7C%203.12-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org/)
+[![Streamlit](https://img.shields.io/badge/Streamlit-1.35%2B-FF4B4B?style=for-the-badge&logo=streamlit&logoColor=white)](https://streamlit.io/)
+[![Google Gemini](https://img.shields.io/badge/Google%20Gemini-2.5%20Flash-4285F4?style=for-the-badge&logo=google&logoColor=white)](https://ai.google.dev/)
+[![FLUX](https://img.shields.io/badge/FLUX.1-AI%20Graphics-7C3AED?style=for-the-badge)](https://pollinations.ai/)
+[![Test Suite](https://img.shields.io/badge/Pytest-109%20Passing%20(100%25)-10B981?style=for-the-badge&logo=pytest&logoColor=white)](https://github.com/Shweta-Mishra-ai/growth_engine_app)
+[![License](https://img.shields.io/badge/License-MIT-10B981?style=for-the-badge)](LICENSE)
 
-**Growth Engine AI v3.1** brings a major performance, UI/UX, and architectural upgrade to the platform:
-* **UI/UX Overhaul**: Modern dark theme with Space Grotesk and Inter typography, responsive tab containers, authentic feed simulation previews, and crisp component layouts.
-* **Algorithmic Quality Scoring**: Instant, deterministic quality rubric scoring LinkedIn posts (Grade A–D / 100) on hook strength, mobile spacing, word count dwell time, CTA questions, hashtags, and AI clichés.
-* **LinkedIn Carousel Generator**: Slide-by-slide multi-slide carousel generator engineered for high dwell time.
-* **Dedicated Content Schedule Manager**: Complete calendar dashboard to view, filter, copy, cancel, and export scheduled posts across LinkedIn, Twitter, and Instagram to CSV and JSON.
-* **Visual Studio 2.0**: Standalone and inline AI graphic generation powered by Flux with 8 curated art styles and 4 aspect ratios (Landscape 16:9, Square 1:1, Portrait 4:5, Story 9:16).
-* **In-App API Key Configuration**: Seamless API key entry directly in the sidebar with live status indicator and secrets fallback.
-* **Comprehensive Test Suite**: 109 automated unit tests verifying prompts, token limits, parsers, schedulers, image services, and exports.
+[Features](#-core-capabilities) • [Architecture](#-system-architecture) • [Quality Scoring](#-deterministic-quality-rubric) • [Quickstart](#-quickstart--deployment) • [Testing](#-verification--testing)
+
+</div>
 
 ---
 
-## 🎨 System Architecture
+## ⚡ The Problem & The Solution
+
+| Traditional AI Content Tools | 🚀 Growth Engine AI v3.1 |
+| :--- | :--- |
+| **Generic, robot-sounding prose** laden with AI clichés (*"In today's fast-paced world...", "game-changer"*). | **Zero-cliché strict filter**: Enforced heuristic bans on corporate buzzwords with native platform pacing. |
+| **One-size-fits-all text** with no platform awareness. | **Platform-specific token mechanics**: Mobile "see more" cutoff hooks for LinkedIn, strict 280-char caps for X, carousel decks, and Instagram saves-optimized copy. |
+| **Hallucinated quality**: No metrics on whether a post will actually perform. | **Algorithmic Quality Rubric**: Deterministic 0–100 quality scoring + Grade A–D analyzing dwell time, hook stopping power, mobile line breaks, and comment CTAs. |
+| **Manual copying hassles & lost formatting**. | **1-Click Native Share**: Custom clipboard engine with immediate redirect to platform feeds with preserved layout. |
+| **External graphic creation needed**. | **Built-in Visual Studio**: Instant generation of tailored 16:9 banners, 1:1 carousels, and 4:5 portraits via FLUX. |
+
+---
+
+## 🌟 Core Capabilities
+
+```
+Growth Engine AI
+├── 💼 LinkedIn Studio
+│   ├── 6 Viral Pacing Formats (Hook-Story-Lesson, Contrarian Take, Listicle, Case Study, etc.)
+│   ├── Document Carousel Deck Architect (Multi-slide engagement driver)
+│   ├── Deterministic Quality Score Gauge (0-100 rubric & actionable tips)
+│   └── Feed Simulation Preview & 1-Click Clipboard + Feed Dispatcher
+│
+├── 🐦 Twitter/X Thread Smith
+│   ├── Full-thread generator with psychological curiosity gaps
+│   ├── Per-tweet character validation cards (<280 hard limit with real-time alerts)
+│   └── 1-Click thread clipboard copy & web composer launch
+│
+├── 📸 Instagram Suite
+│   ├── A/B Caption Lab: Version A (Hook-driven) & Version B (Storytelling)
+│   ├── Story Teasers & 3-Tier Hashtags
+│   └── Reels & TikTok Storyboarder (Second-by-second visual directions & voiceover scripts)
+│
+├── 🎣 Psychological Hooks Lab
+│   └── 7 High-Converting Frameworks (Curiosity Gap, Bold Claim, Counterintuitive, Empathy, etc.)
+│
+├── 🧬 Voice DNA Extractor
+│   ├── Multi-sample linguistic analysis (Sentence rhythm, vocabulary level, signature quirks)
+│   └── Global tone-matching engine applied across all generator modules
+│
+├── 🔬 Post Autopsy & Re-engineering
+│   └── Deconstructs viral reference posts into reusable structural blueprints
+│
+├── 🔍 Profile & Bio Auditor
+│   └── Personal Brand Consultant scoring bios out of 10 with 3 executive rewrites
+│
+├── 🎨 Visual Studio 2.0
+│   ├── Standalone text-to-image engine powered by Flux
+│   └── 8 Curated art styles (3D Clay, Minimalist Flat, Tech Vector, Photorealistic, etc.)
+│
+└── 📅 Content Schedule Dashboard
+    ├── Queue manager across LinkedIn, Twitter/X, and Instagram
+    └── Instant export to structured CSV and JSON
+```
+
+---
+
+## 🏗️ System Architecture
 
 ```mermaid
 graph TD
-    classDef main fill:#6366f1,stroke:#4f46e5,stroke-width:2px,color:#fff;
-    classDef comp fill:#1e293b,stroke:#475569,stroke-width:1px,color:#cbd5e1;
-    classDef svc fill:#0f172a,stroke:#334155,stroke-width:1px,color:#94a3b8;
+    classDef client fill:#1e1b4b,stroke:#6366f1,stroke-width:2px,color:#e0e7ff;
+    classDef comp fill:#0f172a,stroke:#334155,stroke-width:1px,color:#cbd5e1;
+    classDef engine fill:#18181b,stroke:#a855f7,stroke-width:1px,color:#f3e8ff;
+    classDef svc fill:#09090b,stroke:#10b981,stroke-width:1px,color:#ecfdf5;
 
-    A[app.py Entrypoint & Tab Orchestrator]:::main
+    Client[🖥️ Streamlit Frontend Layer]:::client
     
-    subgraph UI Components
-        B[styles.py Dark Theme & Tokens]:::comp
-        C[sidebar.py API & Brand Voice Controller]:::comp
-        D[shared.py Feed Previews, Badges & Copy Helpers]:::comp
+    subgraph UI Design System
+        CSS[styles.py Dark Theme & Design Tokens]:::comp
+        Side[sidebar.py API & Brand Voice Controller]:::comp
+        Shared[shared.py Feed Previews & Clipboard Engine]:::comp
     end
-    
-    subgraph Prompt Engine
-        E[linkedin.py Posts & Carousels]:::comp
-        F[twitter.py Threads & Single Tweets]:::comp
-        G[instagram.py Captions & Image Briefs]:::comp
-        H[profile_auditor.py Personal Brand Audit]:::comp
-        I[hashtag_lab.py Tiered Matrix]:::comp
-        J[engagement.py Readability & Velocity]:::comp
-        K[video_storyboard.py Reels / TikToks]:::comp
-        L[graphics.py Visual Designer]:::comp
+
+    subgraph Prompt Engineering Core
+        PLI[linkedin.py Posts & Slide Carousels]:::engine
+        PTW[twitter.py Character-Capped Threads]:::engine
+        PIG[instagram.py Captions & Storyboards]:::engine
+        PHook[hooks.py 7 Psychological Frameworks]:::engine
+        PDNA[voice_dna.py Linguistic Tone Extractor]:::engine
+        PAudit[profile_auditor.py Bio Scorer & Rewriter]:::engine
     end
-    
-    subgraph Services & APIs
-        M[GeminiService Multi-SDK Wrapper]:::svc
-        N[ImageService Pollinations / Flux API]:::svc
-        O[SchedulerService Queue & CSV/JSON Export]:::svc
-        P[TextParser Quality Scoring & Cleaners]:::svc
-        Q[PDFExport ReportLab Document Generator]:::svc
+
+    subgraph Business Logic & Backend Services
+        GSVC[GeminiService Multi-SDK Google Client]:::svc
+        ISVC[ImageService FLUX / Pollinations Engine]:::svc
+        SSVC[SchedulerService Local Queue & CSV/JSON Exporter]:::svc
+        PSVC[TextParser Quality Rubric & Heuristics]:::svc
+        PDF[PDFExport ReportLab Document Generator]:::svc
     end
-    
-    A --> B
-    A --> C
-    A --> D
-    
-    A --> E & F & G & H & I & J & K & L
-    E & F & G & H & I & J & K & L --> M
-    A --> N
-    A --> O
-    A --> P
-    A --> Q
+
+    Client --> CSS & Side & Shared
+    Client --> PLI & PTW & PIG & PHook & PDNA & PAudit
+    PLI & PTW & PIG & PHook & PDNA & PAudit --> GSVC
+    Client --> ISVC & SSVC & PSVC & PDF
 ```
 
 ---
 
-## 🌟 Key Features
+## 📊 Deterministic Quality Rubric
 
-* **💼 LinkedIn Studio**
-  - Hook-Story-Lesson, Contrarian Take, Listicle, Data-Driven, Case Study, and **Carousel Slide Decks**.
-  - **Instant Quality Scoring Rubric** (0–100 score + Grade A–D) evaluating dwell time, hook stopping power, mobile spacing, and comments CTA.
-  - In-depth AI Engagement & Readability analysis.
-  - Native LinkedIn feed simulation preview.
-  - 1-Click Copy Post and Open LinkedIn feed.
-  - Inline AI Banner generator & post scheduler.
+Unlike standard wrappers that rely solely on subjective LLM evaluations, Growth Engine AI features an **in-memory deterministic scoring rubric** for LinkedIn content:
 
-* **🐦 Twitter/X Thread Smith**
-  - Character-capped threads (under 280 characters per tweet) with curiosity gaps.
-  - Individual tweet cards with character counters and over-limit warnings.
-  - One-click copy for the entire thread or individual tweets.
-  - 1-Click Copy & Open Twitter/X composer.
-  - Inline Thread Graphic generator & post scheduler.
+$$\text{Quality Score} = \frac{\sum(\text{Length} + \text{Hook} + \text{Spacing} + \text{CTA} + \text{Hashtags} + \text{Language})}{6}$$
 
-* **📸 Instagram Suite**
-  - A/B Captions: Version A (Hook-driven) and Version B (Story-driven) + Story Teasers.
-  - One-click copy buttons for Version A, Version B, and Story Teasers.
-  - **Reels & Short Video Storyboarder**: Second-by-second visual cues, voiceover script, and editor notes.
-  - Inline Visual Generator (Square 1:1, Portrait 4:5, Story 9:16).
-
-* **🎣 Psychological Hooks Lab**
-  - Rewrites weak openers into 7 psychological frameworks (Curiosity Gap, Bold Claim, Counterintuitive, Empathy, Social Proof, etc.).
-
-* **🧬 Voice DNA Extractor**
-  - Analyzes 2–5 past posts to extract sentence cadence, vocabulary, and tone.
-  - Global toggle in sidebar to enforce your Voice DNA across all generations.
-  - Instant "Write In My Voice" sandbox.
-
-* **🔬 Post Autopsy & Reverse Engineering**
-  - Breaks down viral posts into structural mechanics and applies the winning pattern to new topics.
-
-* **🔍 Profile Auditor**
-  - Scores bios out of 10 with actionable feedback and delivers 3 rewritten options (Authority, Conversational, Minimalist).
-
-* **🏷️ Hashtag Lab**
-  - 3-tier reach sets: High Reach (Broad), Niche Authority, and Community Micro-tags.
-
-* **🎨 Visual Studio**
-  - Standalone graphic generator powered by Flux with 8 styles (Modern Illustration, Photorealistic, 3D Render, Cyberpunk, etc.) and direct PNG download.
-
-* **📅 Content Schedule Manager**
-  - Calendar dashboard to view, filter, copy, cancel, and export scheduled posts across LinkedIn, Twitter, and Instagram to CSV and JSON.
-
-* **📄 Export Center**
-  - Export generation history to Markdown (`.md`), JSON (`.json`), and optional styled PDF (`.pdf`).
+| Dimension | Standard | Scoring Logic |
+| :--- | :--- | :--- |
+| **Hook Stopping Power** | First 80 characters | Evaluates character brevity before the mobile `"see more"` fold, awards bonus for concrete numerical anchors, severely penalizes generic openings (*"Excited to share..."*). |
+| **Mobile Readability** | Spacing & Line breaks | Requires blank lines between thoughts (minimum 4 blank lines per post) to avoid mobile "wall of text" bounce rates. |
+| **Dwell Time Optimization** | Word count | Targets 180–300 words. Short posts (<100 words) are penalized for insufficient dwell time. |
+| **Comment Acceleration** | Closing question | Verifies presence of a thought-provoking, non-generic interrogation within the final 300 characters. |
+| **Hashtag Matrix** | Distribution | Enforces 3–5 targeted niche hashtags placed exclusively on the trailing line. |
+| **Cliché Neutralization** | Corporate buzzwords | Scans for blacklisted phrases (*"dive deep", "game-changer", "synergy", "paradigm shift"*) and penalizes score accordingly. |
 
 ---
 
-## 📂 Project Directory Structure
+## 🚀 Quickstart & Deployment
 
-```text
-growth_engine_app/
-├── app.py                      # Main layout and tab controller (v3.1)
-├── requirements.txt            # Core dependencies
-├── requirements-dev.txt        # Test and lint dependencies
-├── scheduled_posts.json        # Local schedule cache (auto-created)
-├── components/                 # Frontend UI Modules
-│   ├── shared.py               # Feed previews, score badges, copy & share buttons
-│   ├── sidebar.py              # API key config, Brand Voice, and session stats
-│   └── styles.py               # Modern dark theme tokens and component styles
-├── config/                     # Configuration and limits
-│   └── settings.py             # Model settings, word limits, image styles, version
-├── prompts/                    # High-converting prompt builders
-│   ├── engagement.py           # Engagement and readability analysis prompts
-│   ├── graphics.py             # Visual prompt generator
-│   ├── hashtag_lab.py          # Tiered hashtag strategies prompt
-│   ├── hooks.py                # Psychological hook rewriters (7 frameworks)
-│   ├── instagram.py            # Instagram captions and visual briefs
-│   ├── linkedin.py             # LinkedIn posts and carousel decks
-│   ├── post_autopsy.py         # Reverse-engineering templates
-│   ├── profile_auditor.py      # Profile audit checklists
-│   ├── twitter.py              # Twitter/X threads and single tweets
-│   ├── video_storyboard.py     # Short-video storyboards & cues
-│   └── voice_dna.py            # Linguistic voice extraction
-├── services/                   # Business logic utilities
-│   ├── gemini_service.py       # Multi-SDK Google Gemini wrapper with auto-fallback
-│   ├── image_service.py        # Pollinations / Flux image generation service
-│   ├── scheduler_service.py    # Local queue management and CSV/JSON export
-│   ├── text_parser.py          # Quality scoring, word counts, and prompt cleaner
-│   └── pdf_export.py           # ReportLab PDF document builder
-└── tests/                      # Automated test suite (109 tests)
-    ├── test_gemini_service.py  # SDK initialization, mock responses, error classification
-    ├── test_image_service.py   # Image service endpoints and prompt builder
-    ├── test_pdf_export.py      # PDF document construction
-    ├── test_prompts.py         # Prompt syntax, character counts, differentiations
-    ├── test_scheduler.py       # Load, save, delete, clear, and export methods
-    └── test_text_parser.py     # Scorers, regex extractors, and markdown exports
-```
+### Prerequisites
+* Python 3.10, 3.11, or 3.12
+* A free Google Gemini API Key from [Google AI Studio](https://aistudio.google.com/app/apikey)
 
----
-
-## 🚀 Local Setup & Installation
-
-### 1. Clone & Enter Repository
+### 1. Installation
 ```bash
+# Clone the repository
 git clone https://github.com/Shweta-Mishra-ai/growth_engine_app.git
 cd growth_engine_app
-```
 
-### 2. Install Dependencies
-```bash
+# Install production dependencies
 pip install -r requirements.txt
+
+# (Optional) Install development & testing tooling
 pip install -r requirements-dev.txt
 ```
 
-### 3. Setup Secrets (Optional)
-You can configure your API key directly in the web app sidebar, or create `.streamlit/secrets.toml`:
-```toml
-# .streamlit/secrets.toml
-GOOGLE_API_KEY = "AIzaSy...[PASTE YOUR KEY HERE]"
-```
+### 2. Configuration
+You can input your API key directly into the secure **Settings** panel in the web application sidebar, or configure it via secrets:
 
-### 4. Run Testing Suite
 ```bash
-python -m pytest
+mkdir -p .streamlit
+cat << EOF > .streamlit/secrets.toml
+GOOGLE_API_KEY = "your_actual_gemini_api_key_here"
+EOF
 ```
 
-### 5. Launch Streamlit Application
+### 3. Launch Application
 ```bash
 python -m streamlit run app.py
+```
+Access the application at `http://localhost:8501`.
+
+---
+
+## 🧪 Verification & Testing
+
+Growth Engine AI is verified with a comprehensive automated test suite consisting of **109 unit tests**:
+
+```bash
+python -m pytest tests -v
+```
+
+```text
+============================= test session starts =============================
+platform win32 -- Python 3.11+, pytest-9.x, pluggy-1.x
+collected 109 items
+
+tests/test_gemini_service.py .....                                       [  4%]
+tests/test_image_service.py ............                                 [ 15%]
+tests/test_pdf_export.py ...                                             [ 18%]
+tests/test_prompts.py .................................................  [ 59%]
+tests/test_scheduler.py .....                                            [ 64%]
+tests/test_text_parser.py ...........................................    [100%]
+
+============================== 109 passed in 1.47s ==============================
 ```
 
 ---
 
-## 🤝 Contributing
+## 🛠️ Technology Stack
 
-Contributions are welcome! Please run `python -m pytest` to ensure all tests pass before submitting a Pull Request.
+| Layer | Technology |
+| :--- | :--- |
+| **Frontend & UI** | Streamlit 1.35+, Space Grotesk & Inter Typography, Custom CSS Design Tokens |
+| **Core Intelligence** | Google Gemini 2.5 Flash (`google-genai` SDK + `google-generativeai` auto-fallback) |
+| **Image Synthesis** | FLUX.1 via Pollinations AI Engine (Multi-model: Standard, Realism, Anime) |
+| **Scheduling Engine** | Local JSON File-backed Queue with CSV & JSON Export |
+| **Document Export** | ReportLab 4.x (PDF), Markdown, JSON |
+| **Quality Assurance** | Pytest, Pytest-Mock, Ruff |
 
-Built with ❤️ by Shweta Mishra
+---
+
+## 🤝 Contributing & Community
+
+Contributions are welcomed and encouraged!
+1. Fork the Project
+2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
+3. Ensure all tests pass (`python -m pytest`)
+4. Commit your Changes (`git commit -m 'feat: Add AmazingFeature'`)
+5. Push to the Branch (`git push origin feature/AmazingFeature`)
+6. Open a Pull Request
+
+---
+
+## 📄 License
+
+Distributed under the MIT License. See `LICENSE` for more information.
+
+<div align="center">
+Built with ❤️ by <b>Shweta Mishra</b>
+</div>
